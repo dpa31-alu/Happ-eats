@@ -1,32 +1,82 @@
-import 'package:happ_eats/pages/login.dart';
-import 'package:happ_eats/pages/logincosas.dart';
-import 'package:flutter/material.dart';
-import 'pages/welcome_page.dart';
+import 'dart:ui';
 
-void main() {
-  runApp(const MyApp());
+import 'package:google_fonts/google_fonts.dart';
+import 'package:happ_eats/pages/already_logged_redirect.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter/widgets.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  initializeDateFormatting().then((_) => runApp(const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+
+
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Happ-eats',
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('en', ''),
+        Locale('es', ''),
+      ],
       theme: ThemeData(
+        fontFamily: GoogleFonts.lato().fontFamily,
         brightness: Brightness.light,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.orangeAccent),
         useMaterial3: true,
+        appBarTheme: const AppBarTheme(
+          shadowColor: Colors.transparent,
+          elevation: 0.0,
+          scrolledUnderElevation: 10.0,
+          toolbarHeight: 72.0,
+          titleTextStyle: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.normal),
+          iconTheme: IconThemeData(color: Colors.white),
+          color: Colors.deepOrangeAccent,
+        )
       ),
       darkTheme: ThemeData(
+        fontFamily: GoogleFonts.lato().fontFamily,
         colorScheme: ColorScheme.fromSeed(seedColor:  Colors.orangeAccent, brightness: Brightness.dark),
         useMaterial3: true,
+          appBarTheme: const AppBarTheme(
+            shadowColor: Colors.transparent,
+            elevation: 0.0,
+            scrolledUnderElevation: 10.0,
+            toolbarHeight: 72.0,
+            titleTextStyle: TextStyle(color: Colors.white, fontSize: 20.0, fontWeight: FontWeight.normal),
+            /*shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20), bottomRight: Radius.circular(20)),
+            ),*/
+            iconTheme: IconThemeData(color: Colors.white),
+            color: Colors.deepOrangeAccent,
+            )
       ),
       //themeMode: ThemeMode.system, // ThemeMode.dark
-      //themeMode: ThemeMode.dark,
-      home: const WelcomePage(),
+      themeMode: ThemeMode.dark,
+      debugShowCheckedModeBanner: false,
+      home: const RedirectLogin(),
     );
   }
 }

@@ -10,6 +10,16 @@ class SignUpSelector extends StatelessWidget {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       //resizeToAvoidBottomInset: false,
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 10.0),
+          child: FloatingActionButton.small(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(Icons.arrow_back_ios_new_rounded),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.startDocked,
         body: SafeArea(
             child: Stack(
               children:
@@ -21,7 +31,7 @@ class SignUpSelector extends StatelessWidget {
                     height: size.height * 0.6,
                     width: size.width * 1.2,
                     decoration: const BoxDecoration(
-                        color: Colors.lightBlueAccent,
+                        color: Colors.deepPurpleAccent,
                         shape: BoxShape.circle
                     ),
                   ),
@@ -33,7 +43,7 @@ class SignUpSelector extends StatelessWidget {
                     height: size.height * 0.4,
                     width: size.width * 0.70,
                     decoration: const BoxDecoration(
-                        color: Colors.blue,
+                        color: Colors.purple,
                         shape: BoxShape.circle
                     ),
                   ),
@@ -45,18 +55,18 @@ class SignUpSelector extends StatelessWidget {
                     height: size.height * 0.3,
                     width: size.width * 0.55,
                     decoration: const BoxDecoration(
-                        color: Colors.blueAccent,
+                        color: Colors.deepPurpleAccent,
                         shape: BoxShape.circle
                     ),
                   ),
                 ),
 
 
-                ElevatedButton(onPressed: () {
+                /*ElevatedButton(onPressed: () {
                   Navigator.pop(context);
                 }, style: ElevatedButton.styleFrom(elevation:2,), child: const Icon(
                   Icons.arrow_back_ios_new_rounded, size: 25,)
-                ),
+                ),*/
 
 
 
@@ -67,12 +77,12 @@ class SignUpSelector extends StatelessWidget {
                             const Text("¿Qué eres?", style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold,),),
                             const SizedBox(height: 30),
                             ElevatedButton.icon(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.accessibility_new_sharp,
 
                                 size: 30.0,
                               ),
-                              label: Text('Paciente'),
+                              label: const Text('Paciente'),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -80,8 +90,8 @@ class SignUpSelector extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(5.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
                                 ),
                               ),
                             ),
@@ -89,11 +99,11 @@ class SignUpSelector extends StatelessWidget {
                             const SizedBox(height: 20),
 
                             ElevatedButton.icon(
-                              icon: Icon(
+                              icon: const Icon(
                                 Icons.account_balance_sharp,
                                 size: 30.0,
                               ),
-                              label: Text('Profesional'),
+                              label: const Text('Profesional'),
                               onPressed: () {
                                 Navigator.push(
                                   context,
@@ -101,8 +111,8 @@ class SignUpSelector extends StatelessWidget {
                                 );
                               },
                               style: ElevatedButton.styleFrom(
-                                shape: new RoundedRectangleBorder(
-                                  borderRadius: new BorderRadius.circular(5.0),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5.0),
                                 ),
                               ),
                             )

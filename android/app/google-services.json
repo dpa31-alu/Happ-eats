@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "649929059219",
+    "project_id": "happ-eats",
+    "storage_bucket": "happ-eats.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:649929059219:android:bf3c8bdb00ebb4097d9666",
+        "android_client_info": {
+          "package_name": "com.example.happ_eats"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJWaPivBcHsmknaJHJkixGtlCsbMvWwhw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
