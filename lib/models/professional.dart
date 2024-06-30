@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:happ_eats/models/patient.dart';
 
 class ProfessionalModel {
   final String? user;

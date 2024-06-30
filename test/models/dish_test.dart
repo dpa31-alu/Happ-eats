@@ -16,11 +16,11 @@ void main()  {
   group('Test Dish Repository', ()   {
 
     test('Dishes for amount retrieves the correct amount of dishes', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth0 = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth0.authForFakeFirestore);
+      await auth0.signInWithCustomToken('some token');
+      final uid = auth0.currentUser!.uid;
       DishRepository repository = DishRepository(db: firestore);
 
       for(int i = 0; i < 21; i++) {
@@ -33,11 +33,10 @@ void main()  {
     });
 
     test('Dish creation added to batch correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth0 = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth0.authForFakeFirestore);
+      await auth0.signInWithCustomToken('some token');
       DishRepository repository = DishRepository(db: firestore);
 
 
@@ -59,11 +58,10 @@ void main()  {
     });
 
     test('Dish deletion adds tasks to batch correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth0 = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth0.authForFakeFirestore);
+      await auth0.signInWithCustomToken('some token');
       DishRepository repository = DishRepository(db: firestore);
       String id = firestore.collection('dishes').doc().id;
 
@@ -95,11 +93,10 @@ void main()  {
     });
 
     test('Dish retrieval is correct', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth0 = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth0.authForFakeFirestore);
+      await auth0.signInWithCustomToken('some token');
       DishRepository repository = DishRepository(db: firestore);
 
       String id = firestore.collection('dishes').doc().id;
@@ -125,11 +122,10 @@ void main()  {
     });
 
     test('Dish retrieval cam throw exception', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth0 = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth0.authForFakeFirestore);
+      await auth0.signInWithCustomToken('some token');
       DishRepository repository = DishRepository(db: firestore);
 
       String id = firestore.collection('dishes').doc().id;
@@ -151,11 +147,11 @@ void main()  {
     });
 
     test('Dish future retrieval is correct', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth0 = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth0.authForFakeFirestore);
+      await auth0.signInWithCustomToken('some token');
+      final uid = auth0.currentUser!.uid;
       DishRepository repository = DishRepository(db: firestore);
 
       for(int i = 0; i < 21; i++) {

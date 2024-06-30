@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -188,29 +187,6 @@ class DietRepository {
     return batch;
 
   }
-
-  /*
-  static Future<WriteBatch> updateDiet(WriteBatch batch, String newPatient, String newProfessional, String newFirstName, newLastName, String newGender, String newMedicalCondition,
-      Double newWeight, Double newHeight, DateTime newBirthday, String newObjectives, String newType, String date) async {
-
-    batch.update(db.collection('diets')
-        .doc(), {
-      'patient': newPatient,
-      'professional': newProfessional,
-      'firstName': newFirstName,
-      'lastName':newLastName,
-      'gender': newGender,
-      'medicalCondition': newMedicalCondition,
-      'weight': newWeight,
-      'height': newHeight,
-      'birthday': newBirthday,
-      'objectives': newObjectives,
-      'type': newType,
-      'date': date,
-    });
-    return batch;
-  }*/
-
 
   Future<WriteBatch> updateDietFirstName(WriteBatch batch, String uid, String newFirstName) async {
     batch.update(db.collection('diets')

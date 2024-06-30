@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 import 'package:happ_eats/controllers/message_controller.dart';
 
@@ -29,13 +28,13 @@ void main()  {
 
       MockMessageRepository messageRepository = MockMessageRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
 
 
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       MessagesController controller = MessagesController(db: firestore, repositoryMessages: messageRepository,);
 
@@ -65,13 +64,13 @@ void main()  {
 
       MockMessageRepository messageRepository = MockMessageRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
 
 
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       MessagesController controller = MessagesController(db: firestore, repositoryMessages: messageRepository,);
 
@@ -95,11 +94,11 @@ void main()  {
 
       MockMessageRepository messageRepository = MockMessageRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       //MessageRepository repository = MessageRepository(db: firestore);
 
       MessagesController controller = MessagesController(db: firestore, repositoryMessages: messageRepository,);

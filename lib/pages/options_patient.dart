@@ -1,12 +1,23 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:happ_eats/controllers/diet_controller.dart';
 import 'package:happ_eats/controllers/user_controller.dart';
 import 'package:happ_eats/utils/loading_dialog.dart';
 import 'package:intl/intl.dart';
 
+import '../models/application.dart';
+import '../models/appointed_meal.dart';
+import '../models/diet.dart';
+import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
+import '../models/user.dart';
 import '../services/auth_service.dart';
+import '../services/file_service.dart';
+import '../utils/calculateBMI.dart';
 import '../utils/validators.dart';
 import 'already_logged_redirect.dart';
 
@@ -25,8 +36,25 @@ class OptionsPatient extends StatefulWidget {
 
 class OptionsPatientState extends State<OptionsPatient> {
 
-  final DietsController _controllerDiets = DietsController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
-  final UsersController _controllerUsers = UsersController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
+  final DietsController _controllerDiets = DietsController(db: FirebaseFirestore.instance,
+      auth: AuthService(auth: FirebaseAuth.instance,),
+      file: FileService(auth: AuthService(auth: FirebaseAuth.instance,), storage: FirebaseStorage.instance),
+      repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+      repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+      repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+      repositoryDiets: DietRepository(db: FirebaseFirestore.instance));
+
+  final UsersController _controllerUsers = UsersController(
+    db: FirebaseFirestore.instance,
+    auth: AuthService(auth: FirebaseAuth.instance,),
+    repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+    repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+    repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+    repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+    repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+    repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+    repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+    repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
 
   final _nameController = TextEditingController();
   final _surnameController = TextEditingController();
@@ -44,20 +72,18 @@ class OptionsPatientState extends State<OptionsPatient> {
 
   @override
   void initState() {
-    _stateUser = _controllerUsers.getUserData();
+    _stateUser = _controllerUsers.getUserData()!;
     _statePatient = _controllerUsers.getPatientData();
     _stateDiet = _controllerDiets.retrieveDietForUserStream();
     super.initState();
   }
 
   String _dropdownValue = "";
-  final String _objectives = "";
-  final String _type = "";
+
 
   @override
   Widget build(BuildContext context) {
 
-    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       //resizeToAvoidBottomInset: false,
@@ -144,7 +170,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text("Actualize su nombre"),
+                                                        title: const Text("Actualice su nombre"),
                                                         content: Form(
                                                             key: _formKey,
                                                             child:
@@ -211,7 +237,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text("Actualize sus apellidos"),
+                                                        title: const Text("Actualice sus apellidos"),
                                                         content: Form(
                                                             key: _formKey,
                                                             child:
@@ -283,7 +309,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text("Actualize su género"),
+                                                        title: const Text("Actualice su género"),
                                                         content: Form(
                                                             key: _formKey,
                                                             child:
@@ -366,7 +392,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text("Actualize su teléfono"),
+                                                        title: const Text("Actualice su teléfono"),
                                                         content: Form(
                                                             key: _formKey,
                                                             child:
@@ -439,7 +465,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text("Actualize su cumpleaños"),
+                                                        title: const Text("Actualice su cumpleaños"),
                                                         content: Form(
                                                             key: _formKey,
                                                             child:
@@ -521,11 +547,11 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Peso: ${snapshot2.data.weight}"),
+                                                  title: Text("Peso: ${snapshot2.data.weight.toStringAsFixed(2)}"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text("Actualize su peso"),
+                                                        title: const Text("Actualice su peso"),
                                                         content: Form(
                                                             key: _formKey,
                                                             child:
@@ -594,16 +620,15 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Peso Inicial: ${snapshot2.data.startingWeight}"),
-                                                  //trailing: Text(snapshot.data['type'], style: const TextStyle(fontSize: 15.0),),
+                                                  title: Text("Peso Inicial: ${snapshot2.data.startingWeight.toStringAsFixed(2)}"),
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Altura: ${snapshot2.data.height}"),
+                                                  title: Text("Altura: ${snapshot2.data.height.toStringAsFixed(2)}"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text("Actualize su peso"),
+                                                        title: const Text("Actualice su peso"),
                                                         content: Form(
                                                             key: _formKey,
                                                             child:
@@ -671,6 +696,11 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                       icon: const Icon(Icons.update_sharp)),
                                                 ),
                                                 const Divider(),
+                                                ListTile(
+                                                  title: Text("BMI: ${calculateBMI(snapshot2.data.height, snapshot2.data.weight).toStringAsFixed(2)}"),
+                                                  //trailing: Text(snapshot.data['type'], style: const TextStyle(fontSize: 15.0),),
+                                                ),
+                                                const Divider(),
                                                 Column(
                                                   children: [
                                                     const Text('Condiciones Médicas:', style: TextStyle(fontSize: 20.0),),
@@ -678,7 +708,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                     IconButton(onPressed: () async {
                                                       showDialog(context: context, builder: (BuildContext context) {
                                                         return AlertDialog(
-                                                            title: const Text("Actualize su peso"),
+                                                            title: const Text("Actualice su peso"),
                                                             content: SingleChildScrollView(
                                                               child:  Form(
                                                                   key: _formKey,

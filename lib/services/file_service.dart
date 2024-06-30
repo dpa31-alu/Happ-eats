@@ -1,10 +1,8 @@
 import 'dart:io';
 import 'dart:math';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:happ_eats/services/auth_service.dart';
-import 'package:path_provider/path_provider.dart';
 
 class FileService {
 
@@ -55,37 +53,45 @@ class FileService {
      return fileDirection.getDownloadURL();
   }
 
-   /*Future<String?> getDownloadURL(String fileName, String collection, String user) async {
+   Future<String?> downloadDietFile(String fileName, String professional, String patient) async {
     try {
-      return await FirebaseStorage.instance.ref().child(collection).child(user).child(fileName).getDownloadURL();
+      return await storage.ref().child("users").child(professional).child('diets').child(patient).child(fileName).getDownloadURL();
     } on FirebaseException catch (ex) {
       return ex.message;
     }
-  }*/
+  }
 
-   Future<String?> uploadDietFile(FilePickerResult file) async {
+   Future<String?> uploadDietFile(FilePickerResult file, String patient) async {
 
     File c = File(file.files.single.path.toString());
     String fileName = file.names.toString();
 
-    Reference fileDirection = storage.ref().child("users").child(auth.getCurrentUser()!.uid.toString()).child('diet').child(fileName);
+    Reference fileDirection = storage.ref().child("users").child(auth.getCurrentUser()!.uid.toString()).child('diets').child(patient).child(fileName);
     UploadTask task = fileDirection.putFile(c);
     await task;
     return fileName;
   }
 
+  /*
    Future<String?> downloadDietFile(String fileName, String uid) async {
     try {
-      final appDocDir = await getApplicationDocumentsDirectory();
-      const archivo = "dieta.pdf";
-      TaskSnapshot task = await storage.ref().child("users").child(uid).child(fileName).writeToFile(File("${appDocDir.absolute}/$archivo"));
-      task;
+      Directory appDocDir = await getApplicationDocumentsDirectory();
+      const String archivo = "dieta.pdf";
+
+      final File tempFile = File("${appDocDir.absolute.path}/$archivo");
+
+      print(appDocDir.absolute.path);
+
+      TaskSnapshot task = await storage.ref().child("users").child(uid).child('diets').child(auth.getCurrentUser()!.uid.toString()).child(fileName).writeToFile(tempFile);
+       task;
+       await tempFile.create();
+       await OpenFile.open(tempFile.path);
 
     } on FirebaseException catch (ex) {
       return ex.message;
     }
     return null;
-  }
+  }*/
 
    Future<String?> deleteFile(String fileName) async {
     try {

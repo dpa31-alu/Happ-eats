@@ -1,12 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:happ_eats/models/application.dart';
+import 'package:happ_eats/models/appointed_meal.dart';
+import 'package:happ_eats/models/diet.dart';
+import 'package:happ_eats/models/dish.dart';
+import 'package:happ_eats/models/message.dart';
+import 'package:happ_eats/models/patient.dart';
+import 'package:happ_eats/models/user.dart';
 import 'package:happ_eats/pages/menu_patient.dart';
 import 'package:happ_eats/pages/menu_professional.dart';
 import 'package:happ_eats/pages/welcome_page.dart';
 import 'package:happ_eats/services/auth_service.dart';
 
 import '../controllers/user_controller.dart';
+import '../models/professional.dart';
 
 class RedirectLogin extends StatelessWidget {
   const RedirectLogin({super.key});
@@ -17,7 +25,17 @@ class RedirectLogin extends StatelessWidget {
 
     AuthService auth =  AuthService(auth: FirebaseAuth.instance,);
 
-    final UsersController controllerUser = UsersController(db: FirebaseFirestore.instance, auth: auth);
+    final UsersController controllerUser = UsersController(
+        db: FirebaseFirestore.instance,
+        auth: auth,
+        repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+        repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+        repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+        repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+        repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+        repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+        repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+        repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
 
     return Scaffold(
       body: StreamBuilder(
@@ -41,7 +59,7 @@ class RedirectLogin extends StatelessWidget {
                     return const WelcomePage();
                   }
                   else if (!snapshot2.hasData) {
-                    return const CircularProgressIndicator();
+                    return  const Center(child: CircularProgressIndicator(),);
                   }
                   else if (snapshot2.data == true) {
                     /*Navigator.pushReplacement(context,  MaterialPageRoute<void>(

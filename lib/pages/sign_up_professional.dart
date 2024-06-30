@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:happ_eats/pages/login.dart';
 
 import '../controllers/user_controller.dart';
+import '../models/application.dart';
+import '../models/appointed_meal.dart';
+import '../models/diet.dart';
+import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
+import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../utils/validators.dart';
 import 'already_logged_redirect.dart';
@@ -39,7 +47,17 @@ class SignUpProfessionalState extends State<SignUpProfessional> {
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
 
-    final UsersController controllerUser = UsersController(db: FirebaseFirestore.instance, auth: AuthService(auth: FirebaseAuth.instance,));
+    final UsersController controllerUsers = UsersController(
+      db: FirebaseFirestore.instance,
+      auth: AuthService(auth: FirebaseAuth.instance,),
+      repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+      repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+      repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+      repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+      repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+      repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+      repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+      repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
 
     return  Scaffold(
       //resizeToAvoidBottomInset: false,
@@ -258,7 +276,7 @@ class SignUpProfessionalState extends State<SignUpProfessional> {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
 
-                                      String? result = await controllerUser.createUserProfessional(_email, _password, _tel, _name,
+                                      String? result = await controllerUsers.createUserProfessional(_email, _password, _tel, _name,
                                           _surname, _collegeNumber, _gender);
 
                                       if(result == null&&context.mounted)

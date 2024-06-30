@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:happ_eats/models/diet.dart';
-import 'package:happ_eats/models/patient.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 
@@ -16,12 +13,12 @@ void main()  {
   group('Test Diet Repository', ()   {
 
     test('Diet can be added to batch for creation', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       DietRepository repository = DietRepository(db: firestore);
 
       DateTime date = DateTime.now();
@@ -38,12 +35,12 @@ void main()  {
 
     test('Diet can be added to batch for deletion', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -63,12 +60,12 @@ void main()  {
 
     test('Diet can be added to batch for updating firstName', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -88,12 +85,12 @@ void main()  {
 
     test('Diet can be added to batch for updating lastName', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -114,12 +111,12 @@ void main()  {
 
     test('Diet can be added to batch for updating gender', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -140,12 +137,12 @@ void main()  {
 
     test('Diet can be added to batch for updating medical conditions', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -166,12 +163,12 @@ void main()  {
 
     test('Diet can be added to batch for updating weight', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -192,12 +189,12 @@ void main()  {
 
     test('Diet can be added to batch for updating height', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -218,14 +215,14 @@ void main()  {
 
     test('Diet can be added to batch for updating birthday', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
       DateTime date = DateTime.now();
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -246,14 +243,13 @@ void main()  {
 
     test('Diet can be added to batch for adding reference to a document', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      DateTime date = DateTime.now();
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
@@ -273,15 +269,14 @@ void main()  {
 
     test('Diet can return empty map', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
-      DateTime date = DateTime.now();
 /*
       String id = "0212151512";
 
@@ -308,19 +303,17 @@ void main()  {
 
     test('Diet can be retrieved', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
-      DateTime date = DateTime.now();
 
       DateTime time = DateTime.timestamp();
 
-      String id = "0212151512";
 
       Map<String, dynamic> m = {'patient': uid,
         'professional': uid,
@@ -378,19 +371,17 @@ void main()  {
     test('Diet retrieval can cause exception', () async {
 
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       DietRepository repository = DietRepository(db: firestore);
 
-      DateTime date = DateTime.now();
 
       DateTime time = DateTime.timestamp();
 
-      String id = "0212151512";
 
       Map<String, dynamic> m = {'patient': uid,
         'professional': uid,
@@ -433,11 +424,11 @@ void main()  {
     });
 
     test('Get all diets returns the correct amount of diets for the correct professional', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       DietRepository repository = DietRepository(db: firestore);
 
       DateTime time = DateTime.timestamp();
@@ -471,7 +462,7 @@ void main()  {
 
       //print(firestore.dump());
 
-      await repository.getAllDiets('Peso', 21, uid).listen(expectAsync1 ((snap) {
+      repository.getAllDiets('Peso', 21, uid).listen(expectAsync1 ((snap) {
         expect(snap.docChanges.length, 21);
         expect(snap.docChanges.first.doc.data()!['type'], 'Peso');
       }));
@@ -479,11 +470,11 @@ void main()  {
     });
 
     test('Get all diets returns the correct amount of diets for the correct professional', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       DietRepository repository = DietRepository(db: firestore);
 
       DateTime time = DateTime.timestamp();
@@ -524,11 +515,11 @@ void main()  {
     });
 
     test('Get all diets returns the correct amount of diets for the correct professional', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       DietRepository repository = DietRepository(db: firestore);
 
       DateTime time = DateTime.timestamp();

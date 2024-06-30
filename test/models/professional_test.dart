@@ -13,12 +13,12 @@ void main()  {
   group('Test Professional Repository', ()   {
 
     test('Professional can be added to batch for creation', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ProfessionalRepository repository = ProfessionalRepository(db: firestore);
 
 
@@ -33,12 +33,12 @@ void main()  {
 
     test('Professional can be added to batch for deletion', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       ProfessionalRepository repository = ProfessionalRepository(db: firestore);
 
@@ -57,15 +57,14 @@ void main()  {
 
     test('Professional can be retrieved', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       ProfessionalRepository repository = ProfessionalRepository(db: firestore);
 
-      String id = "0212151512";
 
       firestore.collection('professionals').doc(uid).set({'collegeNumber': 'collegeNumber',});
       DocumentSnapshot test = await firestore.collection('professionals').doc(uid).get();
@@ -88,15 +87,14 @@ void main()  {
 
     test('Professional retrieval can cause exception', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       ProfessionalRepository repository = ProfessionalRepository(db: firestore);
 
-      String id = "0212151512";
 
       firestore.collection('professionals').doc(uid).set({'collegeNumber': 'collegeNumber',});
       DocumentSnapshot test = await firestore.collection('professionals').doc(uid).get();

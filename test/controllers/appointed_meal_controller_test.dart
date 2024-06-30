@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:happ_eats/controllers/appointed_meal_controller.dart';
 
-import 'package:happ_eats/controllers/message_controller.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:happ_eats/models/appointed_meal.dart';
@@ -18,8 +16,7 @@ import 'package:mockito/mockito.dart';
 
 
 import 'appointed_meal_controller_test.mocks.dart';
-import 'dish_controller_test.mocks.dart';
-import 'message_controller_test.mocks.dart';
+
 
 @GenerateNiceMocks([MockSpec<AppointedMealRepository>()])
 @GenerateNiceMocks([MockSpec<DishRepository>()])
@@ -36,11 +33,11 @@ void main()  {
       MockAppointedMealRepository appointedMealRepository = MockAppointedMealRepository();
       MockDishRepository dishRepository = MockDishRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       AppointedMealsController controller = AppointedMealsController(db: firestore, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository);
 
@@ -72,11 +69,11 @@ void main()  {
       MockAppointedMealRepository appointedMealRepository = MockAppointedMealRepository();
       MockDishRepository dishRepository = MockDishRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       AppointedMealsController controller = AppointedMealsController(db: firestore, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository);
 
@@ -87,19 +84,19 @@ void main()  {
       DateTime fakeDay = DateTime.utc(DateTime.now().year-1, DateTime.now().month, DateTime.now().day);
 
       for(int i = 0; i < 21; i++) {
-        await firestore.collection('appointedMeals').doc().set({'diet': uid,'appointedDate': focusedDay, 'followedCorrectly':true});
+        await firestore.collection('appointedMeals').doc().set({'diet': uid, 'patient': uid, 'professional': uid, 'appointedDate': focusedDay, 'followedCorrectly':true});
       }
       for(int i = 0; i < 21; i++) {
-       await firestore.collection('appointedMeals').doc().set({'diet': uid,'appointedDate': fakeDay, 'followedCorrectly':true});
+       await firestore.collection('appointedMeals').doc().set({'diet': uid, 'patient': uid, 'professional': uid, 'appointedDate': fakeDay, 'followedCorrectly':true});
       }
 
-      when(appointedMealRepository.getAllAppointmentsStream(any, any, any)).thenAnswer((realInvocation) => firestore.collection('appointedMeals').where('diet', isEqualTo: uid)
+      when(appointedMealRepository.getAllAppointmentsStream(any, any, any, any)).thenAnswer((realInvocation) => firestore.collection('appointedMeals').where('diet', isEqualTo: uid)
           .where('appointedDate', isGreaterThanOrEqualTo: focusedDay2).where('appointedDate', isLessThanOrEqualTo: focusedDay).snapshots());
 
 
-      controller.retrieveAllDishesForUserStream(focusedDay2,  focusedDay, uid).listen(expectAsync1 ((snap) {
+      controller.retrieveAllDishesForUserStream(focusedDay2,  focusedDay, uid, uid).listen(expectAsync1 ((snap) {
         expect(snap.docChanges.length, 21);
-      }));;
+      }));
 
     });
 
@@ -110,13 +107,13 @@ void main()  {
       MockAppointedMealRepository appointedMealRepository = MockAppointedMealRepository();
       MockDishRepository dishRepository = MockDishRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
 
 
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       AppointedMealsController controller = AppointedMealsController(db: firestore, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository);
 
@@ -160,13 +157,13 @@ void main()  {
       MockAppointedMealRepository appointedMealRepository = MockAppointedMealRepository();
       MockDishRepository dishRepository = MockDishRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
 
 
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       AppointedMealsController controller = AppointedMealsController(db: firestore, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository);
 
@@ -205,13 +202,13 @@ void main()  {
       MockAppointedMealRepository appointedMealRepository = MockAppointedMealRepository();
       MockDishRepository dishRepository = MockDishRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
 
 
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       AppointedMealsController controller = AppointedMealsController(db: firestore, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository);
 
@@ -255,13 +252,13 @@ void main()  {
       MockAppointedMealRepository appointedMealRepository = MockAppointedMealRepository();
       MockDishRepository dishRepository = MockDishRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
 
 
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       AppointedMealsController controller = AppointedMealsController(db: firestore, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository);
 
@@ -300,13 +297,13 @@ void main()  {
       MockAppointedMealRepository appointedMealRepository = MockAppointedMealRepository();
       MockDishRepository dishRepository = MockDishRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
 
 
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       AppointedMealsController controller = AppointedMealsController(db: firestore, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository);
 
@@ -352,13 +349,13 @@ void main()  {
       MockAppointedMealRepository appointedMealRepository = MockAppointedMealRepository();
       MockDishRepository dishRepository = MockDishRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
 
 
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       AppointedMealsController controller = AppointedMealsController(db: firestore, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository);
 

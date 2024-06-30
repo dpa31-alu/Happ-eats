@@ -1,20 +1,17 @@
 import 'dart:io';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:happ_eats/services/auth_service.dart';
 import 'package:happ_eats/services/file_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:test/test.dart';
 
 
-import 'package:mock_exceptions/mock_exceptions.dart';
+
 
 import '../controllers/dish_controller_test.mocks.dart';
 
@@ -23,10 +20,12 @@ import '../controllers/dish_controller_test.mocks.dart';
 
 void main() {
 
-  final MockFirebaseStorage storage = MockFirebaseStorage();
+   MockFirebaseStorage storage = MockFirebaseStorage();
   final MockAuthService authService = MockAuthService();
   final MockFirebaseAuth auth = MockFirebaseAuth();
-  final imageTestFile = 'assets/images/gochujang.jpg';
+  const imageTestFile = 'assets/images/gochujang.jpg';
+
+  setUp(() => storage = MockFirebaseStorage());
 
   group('Test File Service', ()  {
 
@@ -74,9 +73,8 @@ void main() {
 
       FilePickerResult pepe =  FilePickerResult([platformFile]);
 
-      Map p = storage.storedFilesMap;
 
-      expect(await fileService.uploadImageFile(pepe, 'name'), throwsException);
+      expect(()=> fileService.uploadImageFile(pepe, 'name'), throwsException);
 
     });
 
@@ -99,9 +97,9 @@ void main() {
 
       FilePickerResult pepe =  FilePickerResult([platformFile]);
 
-      await fileService.uploadDietFile(pepe);
+      await fileService.uploadDietFile(pepe, 'uid');
 
-      Map p = storage.storedFilesMap;
+      Map p =  storage.storedFilesMap;
 
       expect(p.values.single.toString(), 'File: \'assets/images/gochujang.jpg\'');
 
@@ -125,9 +123,8 @@ void main() {
 
       FilePickerResult pepe =  FilePickerResult([platformFile]);
 
-      Map p = storage.storedFilesMap;
 
-      expect(fileService.uploadDietFile(pepe), throwsException);
+      expect(fileService.uploadDietFile(pepe, 'uid'), throwsException);
 
     });
 
@@ -138,9 +135,7 @@ void main() {
 
       final fileService = FileService(storage: storage, auth: authService);
 
-
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => auth.currentUser);
-
 
       final imageFile = File(imageTestFile);
       final bytes = imageFile.readAsBytesSync();
@@ -184,7 +179,6 @@ void main() {
 
       FilePickerResult file =  FilePickerResult([platformFile]);
 
-      File c = File(file.files.single.path.toString());
       String fileName = file.names.toString();
 
       expect( await fileService.deleteFile(fileName), 'error');

@@ -6,7 +6,6 @@ import 'package:happ_eats/models/ingredient.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 
-import 'package:mock_exceptions/mock_exceptions.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -26,11 +25,10 @@ void main()  {
 
       final ingredientRepository = MockIngredientRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
 
       IngredientsController controller = IngredientsController(db: firestore, repositoryIngredient: ingredientRepository);
 
@@ -52,16 +50,14 @@ void main()  {
 
       final ingredientRepository = MockIngredientRepository();
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
 
       IngredientsController controller = IngredientsController(db: firestore, repositoryIngredient: ingredientRepository);
 
       firestore.collection('ingredients').doc().set({'ingredients': [{'nombre':'patata'},{'nombre':'huevo'}] });
-      
 
       when(ingredientRepository.getAllIngredients()).thenAnswer((realInvocation) => firestore.collection('ingredients').get());
 

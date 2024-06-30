@@ -11,8 +11,13 @@ import 'package:happ_eats/utils/loading_dialog.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../controllers/dish_controller.dart';
+import '../models/application.dart';
 import '../models/appointed_meal.dart';
+import '../models/diet.dart';
 import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../services/file_service.dart';
@@ -21,10 +26,10 @@ import '../services/file_service.dart';
 class CalendarProfessional extends StatefulWidget {
 
   final String dietID;
-  final String professional;
-  final String patient;
+  final String professionalID;
+  final String patientID;
 
-  const CalendarProfessional({super.key, required this.dietID, required this.professional, required this.patient});
+  const CalendarProfessional({super.key, required this.dietID, required this.professionalID, required this.patientID});
 
   @override
   CalendarProfessionalState createState() {
@@ -34,7 +39,7 @@ class CalendarProfessional extends StatefulWidget {
 
 class CalendarProfessionalState extends State<CalendarProfessional> {
 
-  final _formKey = GlobalKey<FormState>();
+
 
   final CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -42,7 +47,17 @@ class CalendarProfessionalState extends State<CalendarProfessional> {
 
   final AppointedMealsController _controllerMeals = AppointedMealsController(db: FirebaseFirestore.instance, repositoryDish: DishRepository(db: FirebaseFirestore.instance), repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance));
 
-  final UsersController _controllerUsers = UsersController(db: FirebaseFirestore.instance, auth: AuthService(auth: FirebaseAuth.instance,));
+  final UsersController _controllerUsers = UsersController(
+    db: FirebaseFirestore.instance,
+    auth: AuthService(auth: FirebaseAuth.instance,),
+    repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+    repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+    repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+    repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+    repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+    repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+    repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+    repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
 
   final DishesController _controllerDishes = DishesController(db: FirebaseFirestore.instance,
       auth: AuthService(auth: FirebaseAuth.instance,),
@@ -52,11 +67,10 @@ class CalendarProfessionalState extends State<CalendarProfessional> {
 
   late Map<DateTime, List<Map<String, dynamic>>> _events;
 
-  late Stream<QuerySnapshot> _stateEvents;
 
   List<Map<String, dynamic>> _selectedEvents = [];
 
-  Map<String, dynamic>? _userDishes = {};
+  Map<String, dynamic> _userDishes = {};
 
   String _typeSelected = '';
 
@@ -78,10 +92,14 @@ class CalendarProfessionalState extends State<CalendarProfessional> {
   }
 
   _dishesLoader() async {
-    Map<String, dynamic>? dishesRetrieved = await _controllerUsers.getUserDishes();
-    setState(() {
-      _userDishes = dishesRetrieved;
-    });
+    UserModel? userInfo = await _controllerUsers.getUserDataFuture();
+    if (userInfo != null&&userInfo.dishes!=null)
+    {
+      setState(() {
+        _userDishes = userInfo.dishes!;
+      });
+    }
+
   }
 
   /*_eventsLoader() async {
@@ -162,17 +180,17 @@ class CalendarProfessionalState extends State<CalendarProfessional> {
                   ListView.builder(
                       padding: const EdgeInsets.only(right: 10.0, left: 10.0),
                       shrinkWrap: true,
-                      itemCount:  _userDishes!.length,
+                      itemCount:  _userDishes.length,
                       itemBuilder: (context, index) {
                         return Card(child: ListTile(
-                          leading: Text(_userDishes![_userDishes!.keys.elementAt(index)]),
+                          leading: Text(_userDishes[_userDishes.keys.elementAt(index)]),
                           trailing: IconButton(onPressed: () async {
                             if (_typeSelected!='')
                               {
                                 loadingDialog(context);
                                 DateTime today = DateTime.utc(_focusedDay.year, _focusedDay.month, _focusedDay.day);
-                                String? result = await _controllerMeals.createAppointment(_userDishes![_userDishes!.keys.elementAt(index)],
-                                    _userDishes!.keys.elementAt(index), widget.dietID, widget.professional, widget.patient, today, int.parse(_typeSelected));
+                                String? result = await _controllerMeals.createAppointment(_userDishes[_userDishes.keys.elementAt(index)],
+                                    _userDishes.keys.elementAt(index), widget.dietID, widget.professionalID, widget.patientID, today, int.parse(_typeSelected));
 
                                 if(context.mounted)
                                   {
@@ -210,21 +228,15 @@ class CalendarProfessionalState extends State<CalendarProfessional> {
             }),
         appBar: AppBar(
           //leading: Icon(Icons.account_circle_rounded),
+            actions: [Container()],
             title: const Text("Happ-eats"),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings),
-                tooltip: 'Setting Icon',
-                onPressed: () {},
-              ),
-            ]
         ),
         body: SafeArea(
             child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(top: 10.0,left: 10.0,right: 10.0,),
                   child:  StreamBuilder (
-                            stream: _controllerMeals.retrieveAllDishesForUserStream(_findNearestMonday(_focusedDay), _findNearestSunday(_focusedDay), widget.dietID),
+                            stream: _controllerMeals.retrieveAllDishesForUserStream(_findNearestMonday(_focusedDay), _findNearestSunday(_focusedDay), widget.patientID, widget.professionalID),
                             builder: (BuildContext context, AsyncSnapshot snapshot) {
 
                               if (snapshot.hasError) {
@@ -367,9 +379,11 @@ class CalendarProfessionalState extends State<CalendarProfessional> {
                                                 children: [
                                                   if(_selectedEvents[index]['note']!=null)
                                                     if(_selectedEvents[index]['note']!=null)
-                                                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                        const Text("Nota: "),
-                                                        Text(_selectedEvents[index]['note'])],),
+                                                    Column(crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(_selectedEvents[index]['note'], style: const TextStyle(color: Colors.red,))
+                                                        ],
+                                                      ),
 
                                                   ListTile(leading:  const Text("Receta: "),
                                                     trailing: IconButton(onPressed: () async {
@@ -387,7 +401,7 @@ class CalendarProfessionalState extends State<CalendarProfessional> {
                                                                       dishIngredients: p['ingredients'],
                                                                       dishName: p['name'],
                                                                       dishInstructions: p['description'],
-                                                                      dishImage: p['iamge'],
+                                                                      dishImage: p['image'],
                                                                       dishUser: p['user'],
                                                                       dishID: result.id))
                                                           );

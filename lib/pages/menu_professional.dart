@@ -6,8 +6,15 @@ import 'package:happ_eats/pages/dictionary.dart';
 import 'package:happ_eats/pages/show_patients.dart';
 import 'package:happ_eats/pages/user_recipes.dart';
 
-import '../controllers/ingredient_controller.dart';
 import '../controllers/user_controller.dart';
+import '../models/application.dart';
+import '../models/appointed_meal.dart';
+import '../models/diet.dart';
+import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
+import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../utils/loading_dialog.dart';
 import 'options_professional.dart';
@@ -22,7 +29,17 @@ class MenuProfessional extends StatefulWidget {
 class _MenuProfessionalState extends State<MenuProfessional> {
   final GlobalKey<ScaffoldState> _key = GlobalKey();
 
-  final UsersController controllerUser = UsersController(db: FirebaseFirestore.instance, auth: AuthService(auth: FirebaseAuth.instance,));
+  final UsersController _controllerUsers = UsersController(
+    db: FirebaseFirestore.instance,
+    auth: AuthService(auth: FirebaseAuth.instance,),
+    repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+    repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+    repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+    repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+    repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+    repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+    repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+    repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
 
   late String _displayName = "";
 
@@ -37,33 +54,44 @@ class _MenuProfessionalState extends State<MenuProfessional> {
   }
 
   void getNameInitialized() async {
-    Map<String, dynamic>? result = await controllerUser.getCurrentUserNames();
+    UserModel? result = await _controllerUsers.getUserDataFuture();
     if(result!=null)
     {
       setState(() {
-        _displayName = "${result['firstName']} ${result['lastName']}";
-        _gender = "${result['gender']}";
+        _displayName = "${result.firstName} ${result.lastName}";
+        _gender = result.gender;
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return Scaffold(
       //resizeToAvoidBottomInset: false,
         key : _key,
         appBar: AppBar(
-          title: const Text("Happ-eats - Professional"),
-            actions: <Widget>[
-              IconButton(
+          title: const Text("Happ-eats"),
+            leading: IconButton(
                 icon: const Icon(Icons.home_sharp),
                 tooltip: 'Icono home',
                 onPressed: () {
                   _key.currentState!.openDrawer();
                 },
               ),
-            ]
+          actions: [
+            Padding(padding:  const EdgeInsets.only(right: 10),
+              child: CircleAvatar(
+                radius: 25,
+                backgroundColor: Colors.black,
+                child: Padding(
+                  padding: const EdgeInsets.all(1),
+                  child: Image(
+                    image:AssetImage("assets/images/logo.png"),
+                  ),
+                ),
+              ),
+            )
+          ],
         ),
         drawer: Drawer(
           child:  ListView(
@@ -91,7 +119,7 @@ class _MenuProfessionalState extends State<MenuProfessional> {
                 onTap: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>  OptionsProfessional())
+                      MaterialPageRoute(builder: (context) =>  const OptionsProfessional())
                   );
                 },
               ),
@@ -103,7 +131,7 @@ class _MenuProfessionalState extends State<MenuProfessional> {
                 ),
                 onTap: () async {
                   loadingDialog(context);
-                  String? result = await controllerUser.logoutUser();
+                  _controllerUsers.logoutUser();
                   if(context.mounted) {
                     Navigator.pop(context);
                   }
@@ -114,7 +142,7 @@ class _MenuProfessionalState extends State<MenuProfessional> {
         ),
         body: SafeArea(
             child: GridView(
-                padding: const EdgeInsets.only(right: 10.0, left: 10.0),
+                padding: const EdgeInsets.only(right: 10.0, left: 10.0, top:10.0, bottom:10.0),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   mainAxisSpacing: 16,

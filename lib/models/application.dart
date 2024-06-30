@@ -207,6 +207,7 @@ class ApplicationRepository {
     });
     return batch;
   }
+  // (resource.data.toID == request.auth.uid || resource.data.fromID == request.auth.uid)
 
   Future<WriteBatch> deleteApplication(WriteBatch batch, String uid) async {
     batch.delete(db.collection('applications').doc(uid));

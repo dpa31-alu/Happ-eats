@@ -115,14 +115,8 @@ class DictionaryState extends State<Dictionary> {
           leading: IconButton(onPressed: () {
             Navigator.pop(context);
           }, icon: const Icon(Icons.arrow_back),),
+            actions: [Container()],
             title: const Text("Happ-eats"),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings),
-                tooltip: 'Setting Icon',
-                onPressed: () {},
-              ),
-            ]
         ),
         drawerEnableOpenDragGesture: false,
         floatingActionButton: FloatingActionButton.small(
@@ -332,7 +326,7 @@ class DictionaryState extends State<Dictionary> {
                                                 );
                                               }
 
-                                              if(context.mounted) {
+                                              if(result==null && context.mounted) {
                                                 Navigator.pop(context);
                                                 _key.currentState!.closeEndDrawer();
                                                 ScaffoldMessenger.of(context).showSnackBar(
@@ -502,7 +496,8 @@ class DictionaryState extends State<Dictionary> {
                                                 });
                                               },
                                               title: Text(_filteredIngredients[index]["name"].toString()),
-                                              trailing: ElevatedButton(
+                                              trailing: IconButton(
+                                                icon: const Icon(Icons.add_circle_sharp  , size: 30,),
                                                 onPressed: () {
                                                   setState(() {
                                                     if(!_addedIngredients.contains(_filteredIngredients[index])) {
@@ -510,7 +505,6 @@ class DictionaryState extends State<Dictionary> {
                                                     }
                                                   });
                                                 },
-                                                child: const Icon(Icons.add_circle_sharp  , size: 30,),
                                               ),
                                             ),
                                           );

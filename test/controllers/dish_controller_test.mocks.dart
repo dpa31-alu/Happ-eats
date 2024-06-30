@@ -420,27 +420,35 @@ class MockFileService extends _i1.Mock implements _i9.FileService {
       ) as _i8.Future<String>);
 
   @override
-  _i8.Future<String?> uploadDietFile(_i10.FilePickerResult? file) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #uploadDietFile,
-          [file],
-        ),
-        returnValue: _i8.Future<String?>.value(),
-        returnValueForMissingStub: _i8.Future<String?>.value(),
-      ) as _i8.Future<String?>);
-
-  @override
   _i8.Future<String?> downloadDietFile(
     String? fileName,
-    String? uid,
+    String? professional,
+    String? patient,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
           #downloadDietFile,
           [
             fileName,
-            uid,
+            professional,
+            patient,
+          ],
+        ),
+        returnValue: _i8.Future<String?>.value(),
+        returnValueForMissingStub: _i8.Future<String?>.value(),
+      ) as _i8.Future<String?>);
+
+  @override
+  _i8.Future<String?> uploadDietFile(
+    _i10.FilePickerResult? file,
+    String? patient,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #uploadDietFile,
+          [
+            file,
+            patient,
           ],
         ),
         returnValue: _i8.Future<String?>.value(),

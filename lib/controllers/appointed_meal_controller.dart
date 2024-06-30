@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:happ_eats/models/appointed_meal.dart';
+import 'package:happ_eats/models/dish.dart';
 
-import '../models/appointed_meal.dart';
-import '../models/dish.dart';
 
 
 class AppointedMealsController {
 
   final FirebaseFirestore db;
 
-  final repositoryAppointedMeal;
+  final AppointedMealRepository repositoryAppointedMeal;
 
-  final repositoryDish;
+  final DishRepository repositoryDish;
 
   AppointedMealsController({required this.db, required this.repositoryDish, required this.repositoryAppointedMeal});
 
@@ -37,8 +37,8 @@ class AppointedMealsController {
   }
 
 
-  Stream<QuerySnapshot> retrieveAllDishesForUserStream(DateTime dateStart, DateTime dateEnd, String id)  {
-    return repositoryAppointedMeal.getAllAppointmentsStream(dateStart, dateEnd, id);
+  Stream<QuerySnapshot> retrieveAllDishesForUserStream(DateTime dateStart, DateTime dateEnd, String idPatient, String idProfessional)  {
+    return repositoryAppointedMeal.getAllAppointmentsStream(dateStart, dateEnd, idPatient, idProfessional);
   }
 
   Future<String?> confirmConsumption(String id)  async {

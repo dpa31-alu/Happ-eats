@@ -1,6 +1,7 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:happ_eats/controllers/diet_controller.dart';
 import 'package:happ_eats/pages/application_patient.dart';
@@ -14,6 +15,15 @@ import 'package:happ_eats/utils/loading_dialog.dart';
 
 
 import '../controllers/user_controller.dart';
+import '../models/application.dart';
+import '../models/appointed_meal.dart';
+import '../models/diet.dart';
+import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
+import '../models/user.dart';
+import '../services/file_service.dart';
 import 'options_patient.dart';
 
 
@@ -27,15 +37,22 @@ class MenuPatient extends StatefulWidget {
 class _MenuPatientState extends State<MenuPatient> {
    final GlobalKey<ScaffoldState> _key = GlobalKey();
 
-   final UsersController controllerUser = UsersController(db: FirebaseFirestore.instance, auth: AuthService(auth: FirebaseAuth.instance,));
-
+   final UsersController _controllerUsers = UsersController(
+     db: FirebaseFirestore.instance,
+     auth: AuthService(auth: FirebaseAuth.instance,),
+     repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+     repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+     repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+     repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+     repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+     repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+     repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+     repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
    final AuthService auth =  AuthService(auth: FirebaseAuth.instance,);
 
    late String _displayName = "";
 
-   late String _firstName = "";
 
-   late String _lastName = "";
 
    late String _gender = "";
 
@@ -48,35 +65,54 @@ class _MenuPatientState extends State<MenuPatient> {
   }
 
   void getNameInitialized() async {
-    Map<String, dynamic>? result = await controllerUser.getCurrentUserNames();
+    UserModel? result = await _controllerUsers.getUserDataFuture();
     if(result!=null)
       {
         setState(() {
-          _displayName = "${result['firstName']} ${result['lastName']}";
-          _firstName = result['firstName'];
-          _lastName = result['lastName'];
-          _gender = "${result['gender']}";
+          _displayName = "${result.firstName} ${result.lastName}";
+          _gender = result.gender;
         });
       }
   }
 
   @override
   Widget build(BuildContext context) {
+
+    final DietsController controllerDiets = DietsController(db: FirebaseFirestore.instance,
+        auth: AuthService(auth: FirebaseAuth.instance,),
+        file: FileService(auth: AuthService(auth: FirebaseAuth.instance,), storage: FirebaseStorage.instance),
+        repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+        repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+        repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+        repositoryDiets: DietRepository(db: FirebaseFirestore.instance));
+
     return Scaffold(
         key : _key,
       //resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: const Text("Happ-eats"),
-          actions: <Widget>[
-              IconButton(
+          leading: IconButton(
                 icon: const Icon(Icons.home_sharp),
                 tooltip: 'Icono home',
                 onPressed: () {
                   _key.currentState!.openDrawer();
                 },
               ),
-            ],
+          actions: const [
+            Padding(padding:  EdgeInsets.only(right: 10),
+            child: CircleAvatar(
+              radius: 25,
+              backgroundColor: Colors.black,
+              child: Padding(
+                padding: EdgeInsets.all(1),
+                child: Image(
+                  image:AssetImage("assets/images/logo.png"),
+                ),
+              ),
+            ),
+            )
+          ],
         ),
         drawer: Drawer(
           child:  ListView(
@@ -104,7 +140,7 @@ class _MenuPatientState extends State<MenuPatient> {
                 onTap: () {
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>  OptionsPatient())
+                      MaterialPageRoute(builder: (context) =>  const OptionsPatient())
                   );
                 },
               ),
@@ -116,7 +152,7 @@ class _MenuPatientState extends State<MenuPatient> {
                 ),
                 onTap: () async {
                   loadingDialog(context);
-                  String? result = await controllerUser.logoutUser();
+                  _controllerUsers.logoutUser();
                   if(context.mounted) {
                     Navigator.pop(context);
                   }
@@ -127,7 +163,7 @@ class _MenuPatientState extends State<MenuPatient> {
         ),
         body: SafeArea(
             child: GridView(
-                padding: const EdgeInsets.only(right: 10.0, left: 10.0),
+                padding: const EdgeInsets.only(right: 10.0, left: 10.0, top:10.0),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 16,
@@ -146,7 +182,6 @@ class _MenuPatientState extends State<MenuPatient> {
                       ),
                     ),
                     onPressed: () async {
-                      DietsController controllerDiets = DietsController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
                       Map<dynamic, dynamic> userDiet = await controllerDiets.retrieveDietForUser();
 
 
@@ -159,7 +194,7 @@ class _MenuPatientState extends State<MenuPatient> {
                       else if (context.mounted){
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) =>  CalendarPatient(dietID: userDiet['uid']))
+                          MaterialPageRoute(builder: (context) =>  CalendarPatient(patientID: userDiet['patient'], professionalID: userDiet['professional'],))
                         );
                       }
                     },
@@ -238,7 +273,6 @@ class _MenuPatientState extends State<MenuPatient> {
                       ),
                     ),
                     onPressed: ()  async {
-                      DietsController controllerDiets = DietsController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
                       Map<dynamic, dynamic> userDiet = await controllerDiets.retrieveDietForUser();
 
                       if(userDiet.isEmpty&&context.mounted) {

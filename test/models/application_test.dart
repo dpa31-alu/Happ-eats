@@ -17,11 +17,11 @@ void main()  {
   group('Test Application Repository', ()   {
 
     test('Application for user state returns correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ApplicationRepository repository = ApplicationRepository(db: firestore);
       String id = firestore.collection('applications').doc().id;
 
@@ -52,11 +52,11 @@ void main()  {
     });
 
     test('Application for user state returns exception', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ApplicationRepository repository = ApplicationRepository(db: firestore);
       String id = firestore.collection('applications').doc().id;
 
@@ -91,11 +91,11 @@ void main()  {
 
     test('Application for user returns correctly', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ApplicationRepository repository = ApplicationRepository(db: firestore);
       String id = firestore.collection('applications').doc().id;
 
@@ -128,11 +128,11 @@ void main()  {
 
     test('Application for user throws exception', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ApplicationRepository repository = ApplicationRepository(db: firestore);
       String id = firestore.collection('applications').doc().id;
 
@@ -167,11 +167,11 @@ void main()  {
 
     test('Applicacion creation added to batch correctly', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ApplicationRepository repository = ApplicationRepository(db: firestore);
 
       DateTime date = DateTime.now();
@@ -185,11 +185,11 @@ void main()  {
     });
 
     test('Application deletion added to batch correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ApplicationRepository repository = ApplicationRepository(db: firestore);
       String id = firestore.collection('applications').doc().id;
 
@@ -211,13 +211,12 @@ void main()  {
     });
 
     test('Application asigning added to batch correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ApplicationRepository repository = ApplicationRepository(db: firestore);
-      String id = firestore.collection('applications').doc().id;
 
       DateTime date = DateTime.now();
 
@@ -239,11 +238,11 @@ void main()  {
     });
 
     test('Application stream returns correct type and number', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       ApplicationRepository repository = ApplicationRepository(db: firestore);
 
 

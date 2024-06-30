@@ -49,7 +49,7 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
   @override
   Widget build(BuildContext context) {
 
-    final ApplicationsController _controllerApplications = ApplicationsController(db: FirebaseFirestore.instance,
+    final ApplicationsController controllerApplications = ApplicationsController(db: FirebaseFirestore.instance,
         auth: AuthService(auth: FirebaseAuth.instance,),
         file: FileService(auth: AuthService(auth: FirebaseAuth.instance,), storage: FirebaseStorage.instance),
         repositoryUser: UserRepository(db: FirebaseFirestore.instance),
@@ -59,22 +59,20 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
         repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
         repositoryDiets: DietRepository(db: FirebaseFirestore.instance));
 
-    final DietsController controllerDiets = DietsController(db: FirebaseFirestore.instance, auth: AuthService(auth: FirebaseAuth.instance,));
-
+    final DietsController controllerDiets = DietsController(db: FirebaseFirestore.instance,
+        auth: AuthService(auth: FirebaseAuth.instance,),
+        file: FileService(auth: AuthService(auth: FirebaseAuth.instance,), storage: FirebaseStorage.instance),
+        repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+        repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+        repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+        repositoryDiets: DietRepository(db: FirebaseFirestore.instance));
     final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       //resizeToAvoidBottomInset: false,
         appBar: AppBar(
           //leading: Icon(Icons.account_circle_rounded),
-            title: const Text("Happ-eats - Professional"),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings),
-                tooltip: 'Setting Icon',
-                onPressed: () {},
-              ),
-            ]
+            title: const Text("Happ-eats"),
         ),
         body: SafeArea(
             child: SingleChildScrollView(
@@ -86,12 +84,12 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                         children: [
                           Container(
                           padding: const EdgeInsets.only(top: 10.0,),
-                            child: const Text("Peticiones pendientes", style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold,),),
+                            child: const Text("Peticiones pendientes:", style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold,),),
                           ),
 
 
                           StreamBuilder(
-                              stream: _controllerApplications.getApplicationsByTypeStream(_typeSelected, _amount),//FirebaseFirestore.instance.collection('applications').snapshots(),
+                              stream: controllerApplications.getApplicationsByTypeStream(_typeSelected, _amount),//FirebaseFirestore.instance.collection('applications').snapshots(),
                               builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                                 if (!snapshot.hasData) {
                                   return Center(
@@ -101,6 +99,18 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                                           height: size.height * 0.4,
                                         ),
                                         const CircularProgressIndicator(),
+                                      ],
+                                    ),
+                                  );
+                                }
+                                else if(snapshot.hasError) {
+                                  return Center(
+                                    child: Column(
+                                      children: [
+                                        SizedBox(
+                                          height: size.height * 0.4,
+                                        ),
+                                        const Text('Ha ocurrido un error'),
                                       ],
                                     ),
                                   );
@@ -126,8 +136,21 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                                           },
                                         ),
                                       ),
-
-
+                                      SizedBox(
+                                        height: size.height * 0.01,
+                                      ),
+                                      (snapshot.data.docs.length==0) ?
+                                          Center(
+                                            child: Column(
+                                              children: [
+                                                SizedBox(
+                                                  height: size.height * 0.29,
+                                                ),
+                                                Text('No hay peticiones pendientes de esta categoría')
+                                              ],
+                                            )
+                                         )
+                                          :
                                       ListView.builder(
                                         controller: _scrollController,
                                         padding: const EdgeInsets.only(right: 10.0, left: 10.0),
@@ -140,7 +163,8 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                                           title: Text(snapshot.data.docs[index]['firstName'] + " " + snapshot.data.docs[index]['lastName']),
                                           subtitle: Text("Año de nacimiento: ${snapshot.data.docs[index]["birthday"].toDate().year.toString()} y género: ${snapshot.data.docs[index]["gender"]}"),
                                           leading: const Icon(Icons.account_circle),
-                                          trailing: ElevatedButton(
+                                          trailing: IconButton(
+                                                  icon: const Icon(Icons.add, size: 30,),
                                                   onPressed: () async {
                                                     return showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
@@ -155,6 +179,9 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                                                           ),
                                                           TextButton(
                                                             onPressed: () async {
+
+                                                              DocumentSnapshot<Map<String, dynamic>> doc = snapshot.data.docs[index];
+
                                                               String? result = await controllerDiets.createDiet(snapshot.data.docs[index]['user'],
                                                                   snapshot.data.docs[index]['firstName'],
                                                                   snapshot.data.docs[index]['lastName'],
@@ -185,7 +212,6 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                                                     }
                                                     );
                                                   },
-                                                  child: const Icon(Icons.add, size: 30,),
                                                 ),
                                                 children:<Widget>[
                                                   ListTile(
@@ -198,11 +224,11 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                                                   ),
                                                   ListTile(
                                                     title: const Text("Altura"),
-                                                    subtitle: Text(snapshot.data.docs[index]["height"].toString()),
+                                                    subtitle: Text(snapshot.data.docs[index]["height"].toStringAsFixed(2)),
                                                   ),
                                                   ListTile(
                                                     title: const Text("Peso"),
-                                                    subtitle: Text(snapshot.data.docs[index]["weight"].toString()),
+                                                    subtitle: Text(snapshot.data.docs[index]["weight"].toStringAsFixed(2)),
                                                   ),
                                                 ],
                                       ),

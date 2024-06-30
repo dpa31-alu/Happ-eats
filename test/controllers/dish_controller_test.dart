@@ -2,21 +2,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:happ_eats/controllers/dish_controller.dart';
-import 'package:happ_eats/controllers/ingredient_controller.dart';
 import 'package:happ_eats/models/dish.dart';
-import 'package:happ_eats/models/ingredient.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:happ_eats/models/user.dart';
 import 'package:happ_eats/services/auth_service.dart';
 import 'package:happ_eats/services/file_service.dart';
 
 
-import 'package:mock_exceptions/mock_exceptions.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
 import 'dish_controller_test.mocks.dart';
-import 'ingredient_controller_test.mocks.dart';
 
 @GenerateNiceMocks([MockSpec<DishRepository>()])
 @GenerateNiceMocks([MockSpec<FileService>()])

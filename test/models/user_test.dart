@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:happ_eats/models/user.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,12 +13,12 @@ void main()  {
   group('Test User Repository', ()   {
 
     test('User can be added to batch for creation', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       UserRepository repository = UserRepository(db: firestore);
 
 
@@ -34,12 +32,12 @@ void main()  {
 
     test('User can be added to batch for deletion', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 
@@ -58,12 +56,12 @@ void main()  {
 
     test('User can be added to batch for updating phone', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 
@@ -82,12 +80,12 @@ void main()  {
 
     test('User can be added to batch for updating firstName', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 
@@ -106,12 +104,12 @@ void main()  {
 
     test('User can be added to batch for updating lastName', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 
@@ -130,12 +128,12 @@ void main()  {
 
     test('User can be added to batch for updating gender', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 
@@ -154,12 +152,12 @@ void main()  {
 
     test('User can be added to batch for adding dishes', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 
@@ -180,12 +178,12 @@ void main()  {
 
     test('User can be added to batch for deleting dishes', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 
@@ -206,11 +204,11 @@ void main()  {
 
     test('User can be retrieved', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 
@@ -241,11 +239,11 @@ void main()  {
 
     test('User retrieval can cause exception', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       UserRepository repository = UserRepository(db: firestore);
 

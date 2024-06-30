@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:happ_eats/models/message.dart';
 
-import '../models/message.dart';
 
 
 class MessagesController {
 
   final FirebaseFirestore db;
 
-  final repositoryMessages;
+  final MessageRepository repositoryMessages;
 
   MessagesController({required this.db, required this.repositoryMessages});
 

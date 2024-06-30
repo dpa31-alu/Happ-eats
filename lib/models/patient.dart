@@ -1,6 +1,5 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 
 class PatientModel {
   final String? user;
@@ -88,9 +87,9 @@ class PatientModel {
       user: map['user'] as String?,
       gender: map['gender'] as String,
       medicalCondition: map['medicalCondition'] as String,
-      weight: double.parse(map['weight'].toString()) as double,
-      startingWeight: double.parse(map['startingWeight'].toString()) as double,
-      height: double.parse(map['height'].toString()) as double,
+      weight: double.parse(map['weight'].toString()),
+      startingWeight: double.parse(map['startingWeight'].toString()),
+      height: double.parse(map['height'].toString()),
       birthday: map['birthday'].toDate() as DateTime,
     );
   }

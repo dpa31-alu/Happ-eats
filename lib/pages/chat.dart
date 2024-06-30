@@ -59,13 +59,6 @@ class _ChatPageState extends State<ChatPage> {
 
         appBar: AppBar(
             title: const Text("Happ-eats"),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings),
-                tooltip: 'Setting Icon',
-                onPressed: () {},
-              ),
-            ]
         ),
         body: SafeArea(
           child: Column(

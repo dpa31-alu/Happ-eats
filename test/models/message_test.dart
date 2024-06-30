@@ -15,11 +15,11 @@ void main()  {
   group('Test Messages Repository', ()   {
 
     test('Messages for amount retrieves the correct amount of messages and in order', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       MessageRepository repository = MessageRepository(db: firestore);
 
       for(int i = 0; i < 21; i++) {
@@ -36,11 +36,11 @@ void main()  {
     });
 
     test('Send message adds message to batch correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       MessageRepository repository = MessageRepository(db: firestore);
 
       //DateTime date = DateTime.now();
@@ -55,11 +55,11 @@ void main()  {
     });
 
     test('Delete message adds tasks to batch correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       MessageRepository repository = MessageRepository(db: firestore);
 
       for(int i = 0; i < 21; i++) {

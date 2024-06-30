@@ -6,7 +6,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:happ_eats/controllers/appointed_meal_controller.dart';
 import 'package:happ_eats/controllers/dish_controller.dart';
-import 'package:happ_eats/controllers/user_controller.dart';
 import 'package:happ_eats/models/user.dart';
 import 'package:happ_eats/pages/recipe.dart';
 import 'package:happ_eats/services/file_service.dart';
@@ -20,9 +19,10 @@ import '../services/auth_service.dart';
 
 class CalendarPatient extends StatefulWidget {
 
-  final String dietID;
+  final String patientID;
+  final String professionalID;
 
-  const CalendarPatient({super.key, required this.dietID});
+  const CalendarPatient({super.key, required this.patientID, required this.professionalID});
 
   @override
   CalendarPatientState createState() {
@@ -32,7 +32,6 @@ class CalendarPatient extends StatefulWidget {
 
 class CalendarPatientState extends State<CalendarPatient> {
 
-  final _formKey = GlobalKey<FormState>();
 
   final CalendarFormat _calendarFormat = CalendarFormat.week;
   DateTime _focusedDay = DateTime.now();
@@ -42,7 +41,6 @@ class CalendarPatientState extends State<CalendarPatient> {
 
   final AppointedMealsController _controllerMeals = AppointedMealsController(db: FirebaseFirestore.instance, repositoryDish: DishRepository(db: FirebaseFirestore.instance), repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance));
 
-  final UsersController _controllerUsers = UsersController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
 
   final DishesController _controllerDishes = DishesController(db: FirebaseFirestore.instance,
       auth: AuthService(auth: FirebaseAuth.instance,),
@@ -54,9 +52,7 @@ class CalendarPatientState extends State<CalendarPatient> {
 
   List<Map<String, dynamic>> _selectedEvents = [];
 
-  final Map<String, dynamic> _userDishes = {};
 
-  final String _typeSelected = '';
 
   @override
   void initState() {
@@ -100,20 +96,13 @@ class CalendarPatientState extends State<CalendarPatient> {
         appBar: AppBar(
           //leading: Icon(Icons.account_circle_rounded),
             title: const Text("Happ-eats"),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings),
-                tooltip: 'Setting Icon',
-                onPressed: () {},
-              ),
-            ]
         ),
         body: SafeArea(
             child: SingleChildScrollView(
                 child: Padding(
                     padding: const EdgeInsets.only(top: 10.0,left: 10.0,right: 10.0,),
                     child:  StreamBuilder (
-                        stream: _controllerMeals.retrieveAllDishesForUserStream(_findNearestMonday(_focusedDay), _findNearestSunday(_focusedDay), widget.dietID),
+                        stream: _controllerMeals.retrieveAllDishesForUserStream(_findNearestMonday(_focusedDay), _findNearestSunday(_focusedDay), widget.patientID, widget.professionalID),
                         builder: (BuildContext context, AsyncSnapshot snapshot) {
                           if (snapshot.hasError) {
                             return  const Center(child: Text("No se han podido recuperar el calendario"),);
@@ -254,8 +243,9 @@ class CalendarPatientState extends State<CalendarPatient> {
                                                 children: [
                                                    if(_selectedEvents[index]['note']!=null)
                                                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                       const Text("Nota: "),
-                                                       Text(_selectedEvents[index]['note'])],),
+                                                       Text(_selectedEvents[index]['note'], style: TextStyle(color: Colors.red,))
+                                                     ],
+                                                     ),
 
 
                                                   if(_selectedEvents[index]['followedCorrectly']!=true&&_selectedEvents[index]['alternativeRequired']==false)
@@ -307,7 +297,7 @@ class CalendarPatientState extends State<CalendarPatient> {
                                                               onPressed: () async {
                                                                 loadingDialog(context);
                                                                 String id = "${_focusedDay.day}-${_focusedDay.month}-${_focusedDay.year}_${_selectedEvents[index]['diet']}_${_selectedEvents[index]['mealOrder'].toString()}";
-                                                                String? result = null;
+                                                                String? result;
                                                                 if(_problemController.text!="") {
                                                                    result = await _controllerMeals.writeNote(id, _problemController.text);
                                                                 } else {
@@ -350,7 +340,7 @@ class CalendarPatientState extends State<CalendarPatient> {
                                                                         dishIngredients: p['ingredients'],
                                                                         dishName: p['name'],
                                                                         dishInstructions: p['description'],
-                                                                        dishImage: p['iamge'],
+                                                                        dishImage: p['image'],
                                                                         dishUser: p['user'],
                                                                         dishID: result.id))
                                                             );

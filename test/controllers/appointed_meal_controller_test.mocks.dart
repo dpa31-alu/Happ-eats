@@ -7,6 +7,7 @@ import 'dart:async' as _i4;
 
 import 'package:cloud_firestore/cloud_firestore.dart' as _i2;
 import 'package:happ_eats/models/appointed_meal.dart' as _i3;
+import 'package:happ_eats/models/dish.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -35,6 +36,28 @@ class _FakeFirebaseFirestore_0 extends _i1.SmartFake
 
 class _FakeWriteBatch_1 extends _i1.SmartFake implements _i2.WriteBatch {
   _FakeWriteBatch_1(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeDocumentSnapshot_2<T extends Object?> extends _i1.SmartFake
+    implements _i2.DocumentSnapshot<T> {
+  _FakeDocumentSnapshot_2(
+    Object parent,
+    Invocation parentInvocation,
+  ) : super(
+          parent,
+          parentInvocation,
+        );
+}
+
+class _FakeQuerySnapshot_3<T extends Object?> extends _i1.SmartFake
+    implements _i2.QuerySnapshot<T> {
+  _FakeQuerySnapshot_3(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -227,7 +250,8 @@ class MockAppointedMealRepository extends _i1.Mock
   _i4.Stream<_i2.QuerySnapshot<Object?>> getAllAppointmentsStream(
     DateTime? dateStart,
     DateTime? dateEnd,
-    String? id,
+    String? idPatient,
+    dynamic idProfessional,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -235,7 +259,8 @@ class MockAppointedMealRepository extends _i1.Mock
           [
             dateStart,
             dateEnd,
-            id,
+            idPatient,
+            idProfessional,
           ],
         ),
         returnValue: _i4.Stream<_i2.QuerySnapshot<Object?>>.empty(),
@@ -278,4 +303,191 @@ class MockAppointedMealRepository extends _i1.Mock
           ),
         )),
       ) as _i4.Future<_i2.WriteBatch>);
+}
+
+/// A class which mocks [DishRepository].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockDishRepository extends _i1.Mock implements _i5.DishRepository {
+  @override
+  _i2.FirebaseFirestore get db => (super.noSuchMethod(
+        Invocation.getter(#db),
+        returnValue: _FakeFirebaseFirestore_0(
+          this,
+          Invocation.getter(#db),
+        ),
+        returnValueForMissingStub: _FakeFirebaseFirestore_0(
+          this,
+          Invocation.getter(#db),
+        ),
+      ) as _i2.FirebaseFirestore);
+
+  @override
+  _i4.Future<_i2.WriteBatch> createDish(
+    _i2.WriteBatch? batch,
+    String? id,
+    String? user,
+    String? dishName,
+    String? description,
+    Map<String, dynamic>? nutritionalInfo,
+    String? imageName,
+    Map<String, dynamic>? ingredientes,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #createDish,
+          [
+            batch,
+            id,
+            user,
+            dishName,
+            description,
+            nutritionalInfo,
+            imageName,
+            ingredientes,
+          ],
+        ),
+        returnValue: _i4.Future<_i2.WriteBatch>.value(_FakeWriteBatch_1(
+          this,
+          Invocation.method(
+            #createDish,
+            [
+              batch,
+              id,
+              user,
+              dishName,
+              description,
+              nutritionalInfo,
+              imageName,
+              ingredientes,
+            ],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i4.Future<_i2.WriteBatch>.value(_FakeWriteBatch_1(
+          this,
+          Invocation.method(
+            #createDish,
+            [
+              batch,
+              id,
+              user,
+              dishName,
+              description,
+              nutritionalInfo,
+              imageName,
+              ingredientes,
+            ],
+          ),
+        )),
+      ) as _i4.Future<_i2.WriteBatch>);
+
+  @override
+  _i4.Future<_i2.WriteBatch> deleteDish(
+    _i2.WriteBatch? batch,
+    String? uid,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #deleteDish,
+          [
+            batch,
+            uid,
+          ],
+        ),
+        returnValue: _i4.Future<_i2.WriteBatch>.value(_FakeWriteBatch_1(
+          this,
+          Invocation.method(
+            #deleteDish,
+            [
+              batch,
+              uid,
+            ],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i4.Future<_i2.WriteBatch>.value(_FakeWriteBatch_1(
+          this,
+          Invocation.method(
+            #deleteDish,
+            [
+              batch,
+              uid,
+            ],
+          ),
+        )),
+      ) as _i4.Future<_i2.WriteBatch>);
+
+  @override
+  _i4.Stream<_i2.QuerySnapshot<Map<String, dynamic>>> getAllDishes(
+    int? amount,
+    String? id,
+  ) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllDishes,
+          [
+            amount,
+            id,
+          ],
+        ),
+        returnValue:
+            _i4.Stream<_i2.QuerySnapshot<Map<String, dynamic>>>.empty(),
+        returnValueForMissingStub:
+            _i4.Stream<_i2.QuerySnapshot<Map<String, dynamic>>>.empty(),
+      ) as _i4.Stream<_i2.QuerySnapshot<Map<String, dynamic>>>);
+
+  @override
+  _i4.Future<_i2.DocumentSnapshot<Map<String, dynamic>>> getDish(String? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getDish,
+          [id],
+        ),
+        returnValue:
+            _i4.Future<_i2.DocumentSnapshot<Map<String, dynamic>>>.value(
+                _FakeDocumentSnapshot_2<Map<String, dynamic>>(
+          this,
+          Invocation.method(
+            #getDish,
+            [id],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i4.Future<_i2.DocumentSnapshot<Map<String, dynamic>>>.value(
+                _FakeDocumentSnapshot_2<Map<String, dynamic>>(
+          this,
+          Invocation.method(
+            #getDish,
+            [id],
+          ),
+        )),
+      ) as _i4.Future<_i2.DocumentSnapshot<Map<String, dynamic>>>);
+
+  @override
+  _i4.Future<_i2.QuerySnapshot<Map<String, dynamic>>> getAllDishesFuture(
+          String? id) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #getAllDishesFuture,
+          [id],
+        ),
+        returnValue: _i4.Future<_i2.QuerySnapshot<Map<String, dynamic>>>.value(
+            _FakeQuerySnapshot_3<Map<String, dynamic>>(
+          this,
+          Invocation.method(
+            #getAllDishesFuture,
+            [id],
+          ),
+        )),
+        returnValueForMissingStub:
+            _i4.Future<_i2.QuerySnapshot<Map<String, dynamic>>>.value(
+                _FakeQuerySnapshot_3<Map<String, dynamic>>(
+          this,
+          Invocation.method(
+            #getAllDishesFuture,
+            [id],
+          ),
+        )),
+      ) as _i4.Future<_i2.QuerySnapshot<Map<String, dynamic>>>);
 }

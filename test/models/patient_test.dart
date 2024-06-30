@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:happ_eats/models/patient.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -15,12 +13,12 @@ void main()  {
   group('Test Patient Repository', ()   {
 
     test('Patient can be added to batch for creation', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       PatientRepository repository = PatientRepository(db: firestore);
 
       DateTime date = DateTime.now();
@@ -36,12 +34,12 @@ void main()  {
 
     test('Patient can be added to batch for deletion', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
@@ -60,12 +58,12 @@ void main()  {
 
     test('Patient can be added to batch for updating gender', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
@@ -84,12 +82,12 @@ void main()  {
 
     test('Patient can be added to batch for updating medical conditions', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
@@ -108,12 +106,12 @@ void main()  {
 
     test('Patient can be added to batch for updating weight', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
@@ -132,12 +130,12 @@ void main()  {
 
     test('Patient can be added to batch for updating height', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
@@ -156,14 +154,14 @@ void main()  {
 
     test('Patient can be added to batch for updating birthday', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
+          authObject: auth.authForFakeFirestore);
 
       DateTime date = DateTime.now();
 
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
@@ -182,17 +180,16 @@ void main()  {
 
     test('Patient can be retrieved', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
       DateTime date = DateTime.now();
 
-      String id = "0212151512";
 
       Map<String, dynamic> m = {'gender': 'newGender', 'medicalCondition': 'newMedicalCondition', 'weight': 100, 'startingWeight' : 100,  'height': 100,  'birthday': Timestamp.fromDate(date)};
 
@@ -223,17 +220,16 @@ void main()  {
 
     test('Patient retrieval can cause exception', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
       DateTime date = DateTime.now();
 
-      String id = "0212151512";
 
       Map<String, dynamic> m = {'gender': 'newGender', 'medicalCondition': 'newMedicalCondition', 'weight': 100, 'startingWeight' : 100,  'height': 100,  'birthday': Timestamp.fromDate(date)};
 
@@ -248,7 +244,6 @@ void main()  {
         'birthday': Timestamp.fromDate(date)
       });
 
-      PatientModel user = await repository.getPatient(uid);
 
       whenCalling(Invocation.method(#get,  null))
           .on(firestore.collection('patients').doc(uid))
@@ -260,11 +255,11 @@ void main()  {
 
     test('Is patient can return false if user is not a patient', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
@@ -274,11 +269,11 @@ void main()  {
 
     test('Is patient can throw exception', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       PatientRepository repository = PatientRepository(db: firestore);
 
@@ -292,11 +287,11 @@ void main()  {
 
     test('Is patient can return true if user is a patient', () async {
 
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
 
       firestore.collection('patients').doc(uid).set({'gender': 'M',});
       DocumentSnapshot test = await firestore.collection('patients').doc(uid).get();

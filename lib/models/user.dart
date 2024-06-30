@@ -78,12 +78,12 @@ class UserModel {
 
   Map<String, dynamic> toMap() {
     return {
-      'user': this.user,
-      'firstName': this.firstName,
-      'lastName': this.lastName,
-      'tel': this.tel,
-      'gender': this.gender,
-      'dishes': this.dishes,
+      'user': user,
+      'firstName': firstName,
+      'lastName': lastName,
+      'tel': tel,
+      'gender': gender,
+      'dishes': dishes,
     };
   }
 

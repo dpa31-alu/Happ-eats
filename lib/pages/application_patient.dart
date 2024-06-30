@@ -12,6 +12,7 @@ import 'package:happ_eats/models/user.dart';
 import 'package:happ_eats/services/auth_service.dart';
 import 'package:happ_eats/services/file_service.dart';
 import 'package:happ_eats/utils/loading_dialog.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../models/patient.dart';
 import '../utils/validators.dart';
@@ -43,7 +44,17 @@ class ApplicationPatientState extends State<ApplicationPatient> {
        repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
        repositoryDiets: DietRepository(db: FirebaseFirestore.instance));
 
-   final DietsController _controllerDiets = DietsController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
+   final DietsController _controllerDiets = DietsController(db: FirebaseFirestore.instance,
+       auth: AuthService(auth: FirebaseAuth.instance,),
+       file: FileService(auth: AuthService(auth: FirebaseAuth.instance,), storage: FirebaseStorage.instance),
+       repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+       repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+       repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+       repositoryDiets: DietRepository(db: FirebaseFirestore.instance));
+
+
+
+
 
    late Stream _stateApplication;
 
@@ -70,13 +81,6 @@ class ApplicationPatientState extends State<ApplicationPatient> {
         appBar: AppBar(
           //leading: Icon(Icons.account_circle_rounded),
             title: const Text("Happ-eats"),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings),
-                tooltip: 'Setting Icon',
-                onPressed: () {},
-              ),
-            ]
         ),
         body: SafeArea(
             child:  StreamBuilder(
@@ -432,7 +436,7 @@ class ApplicationPatientState extends State<ApplicationPatient> {
                                  )
                              ),
                              SizedBox(
-                               height: size.height * 0.2,
+                               height: size.height * 0.1,
                              ),
                              Card.outlined(
                                child: Padding(
@@ -446,7 +450,18 @@ class ApplicationPatientState extends State<ApplicationPatient> {
                                          Map diet = await _controllerDiets.retrieveDietForUser();
                                          String? result = "Todavía no se ha asignado una archivo a su dieta";
                                          if (diet.isNotEmpty&&diet['url']!=null) {
-                                            result = await _controllerDiets.downloadFile(diet['patient'], diet['url']);
+                                            FileService storage = FileService(storage: FirebaseStorage.instance, auth: AuthService( auth: FirebaseAuth.instance));
+
+                                            String? urlDownload = await _controllerDiets.downloadFile(diet['url'], diet['professional'], diet['patient']);
+
+                                            if (urlDownload != null)
+                                              {
+                                                Uri url = Uri.parse(urlDownload);
+                                                launchUrl(url);
+                                              }
+
+
+                                            //result = await _controllerDiets.downloadFile(diet['professional'], diet['url']);
                                          }
                                          if(context.mounted)
                                          {

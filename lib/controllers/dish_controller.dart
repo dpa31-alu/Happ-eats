@@ -81,7 +81,7 @@ class DishesController {
     try {
       return await repositoryDish.getDish(id);
     }
-    on FirebaseException catch (ex) {
+    on FirebaseException {
       return null;
     }
   }

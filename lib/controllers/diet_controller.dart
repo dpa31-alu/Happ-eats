@@ -1,13 +1,14 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:file_picker/src/file_picker_result.dart';
+import 'package:file_picker/file_picker.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:happ_eats/models/application.dart';
-import 'package:happ_eats/models/diet.dart';
+import 'package:happ_eats/models/message.dart';
 import 'package:happ_eats/services/file_service.dart';
 
-import '../models/message.dart';
 
+import '../models/diet.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../utils/getChatroomId.dart';
@@ -18,22 +19,24 @@ class DietsController {
 
   final AuthService auth;
 
-  late final repositoryUser = UserRepository(db: db);
+  final FileService file;
 
-  late final repositoryMessages = MessageRepository(db: db);
+  final UserRepository repositoryUser;
 
-  late final repositoryApplication = ApplicationRepository(db: db);
+  final MessageRepository repositoryMessages;
 
-  late final repositoryDiets = DietRepository(db: db);
+  final ApplicationRepository repositoryApplication;
 
-  DietsController({required this.db, required this.auth});
+  final DietRepository repositoryDiets;
+
+  DietsController({required this.db, required this.auth, required this.file, required this.repositoryUser, required this.repositoryMessages, required this.repositoryApplication, required this.repositoryDiets});
 
   Future<String?> createDiet(String patient, String firstName, String lastName,
       String gender, String medicalCondition, double weight, double height, DateTime birthday, String objectives, String type) async {
     try {
       User? currentUser = auth.getCurrentUser();
       UserModel professional = await repositoryUser.getUser(currentUser!.uid);
-      String textChain = "Este es un mensaje automatizado para comunicarle que su solicitud ha sido procesada y aceptada por el profesional: " + professional.firstName + " " + professional.lastName;
+      String textChain = "Este es un mensaje automatizado para comunicarle que su solicitud ha sido procesada y aceptada por el profesional: ${professional.firstName} ${professional.lastName}";
       WriteBatch batch = db.batch();
       batch = await repositoryApplication.assignApplication(batch, patient);
       batch = await repositoryDiets.createDiet(batch, patient, currentUser.uid, firstName, lastName, gender, medicalCondition, weight, height, birthday, objectives, type);
@@ -47,17 +50,16 @@ class DietsController {
     return null;
   }
 
-  Future<String?> addFile(String uid) async {
+  Future<String?> addFile(String uid, String patient) async {
     try {
       WriteBatch batch = db.batch();
-      FileService fileService = FileService(storage: FirebaseStorage.instance, auth: auth);
-      FilePickerResult? result = await fileService.getDietFile();
+      FilePickerResult? result = await file.getDietFile();
       String? url;
       if (result==null) {
         return 'Seleccione un archivo.';
       }
       else {
-         url = await fileService.uploadDietFile(result);
+         url = await file.uploadDietFile(result, patient);
       }
       batch = await repositoryDiets.addRefApplication(batch, uid, url!);
 
@@ -69,10 +71,9 @@ class DietsController {
     return null;
   }
 
-  Future<String?> downloadFile(String uid, String fileName) async {
+  Future<String?> downloadFile(String fileName, String patient, String professional) async {
     try {
-      FileService fileService = FileService(storage: FirebaseStorage.instance, auth: auth);
-      await fileService.downloadDietFile(fileName, uid);
+      await file.downloadDietFile(fileName, patient, professional);
     }
     on FirebaseException catch (ex) {
       return ex.message;
@@ -82,44 +83,38 @@ class DietsController {
 
   Stream<QuerySnapshot<Map<String, dynamic>>> retrieveAllDiets(String type, int amount)  {
     User? currentUser = auth.getCurrentUser();
-    return repositoryDiets.getAllDiets(type, amount, currentUser!.uid);
+    if(currentUser!=null) {
+        return repositoryDiets.getAllDiets(type, amount, currentUser.uid);
+    }
+    else {
+      return repositoryDiets.getAllDiets(type, amount, '');
+    }
+
   }
 
   Future<Map<String, dynamic>> retrieveDietForUser()  async {
-    User? currentUser = auth.getCurrentUser();
-    Map<String, dynamic> diet = await repositoryDiets.getDietForUser(currentUser!.uid);
+    Map<String, dynamic> diet = {};
+    try {
+      User? currentUser = auth.getCurrentUser();
+      if (currentUser!=null) {
+        diet = await repositoryDiets.getDietForUser(currentUser.uid);
+      }
+    }
+    on FirebaseException {
+      return {};
+    }
     return diet;
   }
 
   Stream<Map<String, dynamic>> retrieveDietForUserStream()   {
     User? currentUser = auth.getCurrentUser();
-    Future<Map<String, dynamic>> diet =  repositoryDiets.getDietForUser(currentUser!.uid);
+    Future<Map<String, dynamic>> diet;
+    if (currentUser!=null) {
+      diet =  repositoryDiets.getDietForUser(currentUser.uid);
+    } else {
+      diet =  Future<Map<String, dynamic>>.value({});
+    }
     return diet.asStream();
   }
-
-  /*
-  Future<String?> cancelDiet(String? fileName)  async {
-    User? currentUser = auth.getCurrentUser();
-    try {
-      WriteBatch batch = db.batch();
-      if (fileName!=null)
-        {
-          FileService fileService = FileService(storage: FirebaseStorage.instance, auth: auth);
-
-          String? result = await fileService.deleteFile(fileName);
-
-          if(result != null)
-            {
-              return result;
-            }
-        }
-      batch = await repositoryDiets.deleteDiet(batch, currentUser!.uid);
-      await batch.commit();
-    }
-    on FirebaseException catch (ex) {
-      return ex.message;
-    }
-    return null;
-  }*/
 
 }

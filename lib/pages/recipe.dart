@@ -7,7 +7,13 @@ import 'package:happ_eats/controllers/dish_controller.dart';
 import 'package:happ_eats/utils/loading_dialog.dart';
 
 import '../controllers/user_controller.dart';
+import '../models/application.dart';
+import '../models/appointed_meal.dart';
+import '../models/diet.dart';
 import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../services/file_service.dart';
@@ -27,7 +33,20 @@ class ShowRecipe extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    final UsersController controllerUser = UsersController(db: FirebaseFirestore.instance, auth: AuthService(auth: FirebaseAuth.instance,));
+
+
+    final UsersController controllerUsers = UsersController(
+      db: FirebaseFirestore.instance,
+      auth: AuthService(auth: FirebaseAuth.instance,),
+      repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+      repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+      repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+      repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+      repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+      repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+      repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+      repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
+
     final DishesController controllerDishes = DishesController(db: FirebaseFirestore.instance,
         auth: AuthService(auth: FirebaseAuth.instance,),
         file: FileService(storage: FirebaseStorage.instance, auth: AuthService(auth: FirebaseAuth.instance,)),
@@ -75,7 +94,7 @@ class ShowRecipe extends StatelessWidget {
        appBar: AppBar(
          //leading: Icon(Icons.account_circle_rounded),
           title: const Text("Happ-eats"),
-           actions: (controllerUser.getCurrentUserUid()==dishUser)? <Widget>[
+           actions: (controllerUsers.getCurrentUserUid()==dishUser)? <Widget>[
              IconButton(
                icon: const Icon(Icons.delete_forever_sharp),
                tooltip: 'Delete Dish',
@@ -185,7 +204,9 @@ class ShowRecipe extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const Divider(),
+                   SizedBox(
+                    height: size.height * 0.01,
+                  ),
                   Container(
                     padding: const EdgeInsets.only(top: 10.0),
                     height:size.height*0.4,
@@ -245,8 +266,6 @@ class ShowRecipe extends StatelessWidget {
 
                   const Divider(),
 
-
-
                   Card(
                     child: Column(
                       children: [
@@ -260,7 +279,7 @@ class ShowRecipe extends StatelessWidget {
                             String key = dishIngredients.keys.elementAt(index);
                             return ListTile(
                               title: Text(key),
-                              subtitle: Text(dishIngredients[key]),
+                              subtitle: Text(double.parse(dishIngredients[key]).toStringAsFixed(2)),
                             );
                           },
                         ),
@@ -284,7 +303,7 @@ class ShowRecipe extends StatelessWidget {
                             itemBuilder: (context, index) {
                               return ListTile(
                                 title: Text(valuesOrder[index]),
-                                subtitle: Text(dishValues[valuesOrder[index]].toString()),
+                                subtitle: Text(dishValues[valuesOrder[index]].toStringAsFixed(3)),
                               );
                             },
                           ),

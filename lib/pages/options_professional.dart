@@ -1,11 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:happ_eats/controllers/diet_controller.dart';
 import 'package:happ_eats/controllers/user_controller.dart';
 import 'package:happ_eats/utils/loading_dialog.dart';
-import 'package:intl/intl.dart';
 
+import '../models/application.dart';
+import '../models/appointed_meal.dart';
+import '../models/diet.dart';
+import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
+import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../utils/validators.dart';
 import 'already_logged_redirect.dart';
@@ -25,7 +31,17 @@ class OptionsProfessional extends StatefulWidget {
 
 class OptionsProfessionalState extends State<OptionsProfessional> {
 
-  final UsersController _controllerUsers = UsersController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
+  final UsersController _controllerUsers = UsersController(
+    db: FirebaseFirestore.instance,
+    auth: AuthService(auth: FirebaseAuth.instance,),
+    repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+    repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+    repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+    repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+    repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+    repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+    repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+    repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
 
   final _nameController = TextEditingController();
   final _surnameController = TextEditingController();
@@ -37,7 +53,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
 
   @override
   void initState() {
-    _stateUser = _controllerUsers.getUserData();
+    _stateUser = _controllerUsers.getUserData()!;
     super.initState();
   }
 
@@ -46,7 +62,6 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
   @override
   Widget build(BuildContext context) {
 
-    final Size size = MediaQuery.of(context).size;
 
     return Scaffold(
       //resizeToAvoidBottomInset: false,
@@ -102,7 +117,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                           trailing: IconButton(onPressed: () async {
                                                             showDialog(context: context, builder: (BuildContext context) {
                                                               return AlertDialog(
-                                                                title: const Text("Actualize su nombre"),
+                                                                title: const Text("Actualice su nombre"),
                                                                 content: Form(
                                                                     key: _formKey,
                                                                     child:
@@ -169,7 +184,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                           trailing: IconButton(onPressed: () async {
                                                             showDialog(context: context, builder: (BuildContext context) {
                                                               return AlertDialog(
-                                                                title: const Text("Actualize sus apellidos"),
+                                                                title: const Text("Actualice sus apellidos"),
                                                                 content: Form(
                                                                     key: _formKey,
                                                                     child:
@@ -213,7 +228,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                                                     }
                                                                                     else {
                                                                                       setState(() {
-                                                                                        _stateUser = _controllerUsers.getUserData();
+                                                                                        _stateUser = _controllerUsers.getUserData()!;
                                                                                       });
                                                                                     }
                                                                                   }
@@ -241,7 +256,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                           trailing: IconButton(onPressed: () async {
                                                             showDialog(context: context, builder: (BuildContext context) {
                                                               return AlertDialog(
-                                                                title: const Text("Actualize su género"),
+                                                                title: const Text("Actualice su género"),
                                                                 content: Form(
                                                                     key: _formKey,
                                                                     child:
@@ -296,7 +311,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                                                     }
                                                                                     else {
                                                                                       setState(() {
-                                                                                        _stateUser= _controllerUsers.getUserData();
+                                                                                        _stateUser= _controllerUsers.getUserData()!;
                                                                                       });
                                                                                     }
                                                                                   }
@@ -324,7 +339,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                           trailing: IconButton(onPressed: () async {
                                                             showDialog(context: context, builder: (BuildContext context) {
                                                               return AlertDialog(
-                                                                title: const Text("Actualize su teléfono"),
+                                                                title: const Text("Actualice su teléfono"),
                                                                 content: Form(
                                                                     key: _formKey,
                                                                     child:
@@ -368,7 +383,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                                                     }
                                                                                     else {
                                                                                       setState(() {
-                                                                                        _stateUser = _controllerUsers.getUserData();
+                                                                                        _stateUser = _controllerUsers.getUserData()!;
                                                                                       });
                                                                                     }
                                                                                   }

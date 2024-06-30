@@ -13,11 +13,11 @@ void main()  {
   group('Test Appointed Meal Repository', ()   {
 
     test('Appointed meals for today retrieves the correct amount of appointments', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       AppointedMealRepository repository = AppointedMealRepository(db: firestore);
 
       DateTime focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -35,11 +35,11 @@ void main()  {
     });
 
     test('Appointed meals retrieves the correct amount of appointments', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       AppointedMealRepository repository = AppointedMealRepository(db: firestore);
 
       DateTime focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -49,24 +49,24 @@ void main()  {
       DateTime fakeDay = DateTime.utc(DateTime.now().year-1, DateTime.now().month, DateTime.now().day);
 
       for(int i = 0; i < 21; i++) {
-        await firestore.collection('appointedMeals').doc().set({'diet': uid,'appointedDate': focusedDay, 'followedCorrectly':true});
+        await firestore.collection('appointedMeals').doc().set({'diet': uid, 'patient': uid, 'professional': uid,'appointedDate': focusedDay, 'followedCorrectly':true});
       }
       for(int i = 0; i < 21; i++) {
-        await firestore.collection('appointedMeals').doc().set({'diet': uid,'appointedDate': fakeDay, 'followedCorrectly':true});
+        await firestore.collection('appointedMeals').doc().set({'diet': uid, 'patient': uid, 'professional': uid, 'appointedDate': fakeDay, 'followedCorrectly':true});
       }
 
-      repository.getAllAppointmentsStream(focusedDay2, focusedDay, uid).listen(expectAsync1 ((snap) {
+      repository.getAllAppointmentsStream(focusedDay2, focusedDay, uid, uid).listen(expectAsync1 ((snap) {
         expect(snap.docChanges.length, 21);
       }));
 
     });
 
     test('Appointed meal creation batch added correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       AppointedMealRepository repository = AppointedMealRepository(db: firestore);
 
       DateTime focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -91,11 +91,11 @@ void main()  {
     });
 
     test('Appointed meal issues batch added correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       AppointedMealRepository repository = AppointedMealRepository(db: firestore);
 
       DateTime focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -134,11 +134,11 @@ void main()  {
     });
 
     test('Appointed meal confirmation batch added correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       AppointedMealRepository repository = AppointedMealRepository(db: firestore);
 
       DateTime focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
@@ -177,11 +177,11 @@ void main()  {
     });
 
     test('All appointed meal deletion batch added correctly', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
+      MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
-          authObject: _auth.authForFakeFirestore);
-      await _auth.signInWithCustomToken('some token');
-      final uid = _auth.currentUser!.uid;
+          authObject: auth.authForFakeFirestore);
+      await auth.signInWithCustomToken('some token');
+      final uid = auth.currentUser!.uid;
       AppointedMealRepository repository = AppointedMealRepository(db: firestore);
 
       DateTime focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);

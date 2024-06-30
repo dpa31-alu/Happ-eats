@@ -53,13 +53,6 @@ class _UserRecipesState extends State<UserRecipes> {
       //resizeToAvoidBottomInset: false,
         appBar: AppBar(
             title: const Text("Happ-eats"),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings),
-                tooltip: 'Setting Icon',
-                onPressed: () {},
-              ),
-            ]
         ),
         body: SafeArea(
           child:  StreamBuilder(

@@ -19,23 +19,33 @@ class UsersController {
 
   final AuthService auth;
 
-  late final repositoryUser = UserRepository(db: db);
+  final UserRepository repositoryUser ;
 
-  late final repositoryProfessional = ProfessionalRepository(db: db);
+  final ProfessionalRepository repositoryProfessional;
 
-  late final repositoryMessages = MessageRepository(db: db);
+  final MessageRepository repositoryMessages;
 
-  late final repositoryPatient = PatientRepository(db: db);
+  final PatientRepository repositoryPatient;
 
-  late final repositoryDish = DishRepository(db: db);
+  final DishRepository repositoryDish;
 
-  late final repositoryAppointedMeal = AppointedMealRepository(db: db);
+  final AppointedMealRepository repositoryAppointedMeal;
 
-  late final repositoryApplication = ApplicationRepository(db: db);
+  final ApplicationRepository repositoryApplication;
 
-  late final repositoryDiets = DietRepository(db: db);
+  final DietRepository repositoryDiets;
 
-  UsersController({required this.db, required this.auth});
+  UsersController({
+    required this.db,
+    required this.auth,
+    required this.repositoryUser,
+    required this.repositoryProfessional,
+    required this.repositoryMessages,
+    required this.repositoryPatient,
+    required this.repositoryDish,
+    required this.repositoryAppointedMeal,
+    required this.repositoryApplication,
+    required this.repositoryDiets,});
 
   Future<String?> createUserPatient(String email, String password, String tel,
       String firstName, String lastName, String birthday,
@@ -62,24 +72,6 @@ class UsersController {
     }
     return null;
   }
-
-  /*
-   Future<String?> updateUserPatient(String tel,
-      String firstName, String lastName, String birthday,
-      String gender, String medicalCondition, String weight, String height)  async{
-
-    WriteBatch batch = db.batch();
-    try {
-      User? user =  auth.getCurrentUser();
-      batch = await UserModel.updateUserInfo(batch, user!.uid, firstName, lastName, tel, gender);
-      batch = await PatientModel.updatePatient(batch, user.uid, gender, medicalCondition, weight, height, birthday);
-      batch.commit();
-    }
-    on FirebaseException catch (ex) {
-      return ex.message;
-    }
-    return null;
-  }*/
 
   Future<String?> updateUserTel(String tel)  async{
     WriteBatch batch = db.batch();
@@ -342,7 +334,6 @@ class UsersController {
 
   }
 
-
    Stream<bool> isPatient(String uid) {
      return repositoryPatient.isPatient(uid).asStream();
    }
@@ -366,7 +357,6 @@ class UsersController {
   }
 
   String? getCurrentUserUid()  {
-    try {
        User? user =  auth.getCurrentUser();
        if(user!= null) {
          return user.uid;
@@ -374,39 +364,27 @@ class UsersController {
        else{
          return null;
        }
-    } on FirebaseAuthException catch (ex) {
-      return ex.message;
-    }
   }
 
-  Future<Map<String, dynamic>?> getCurrentUserNames()  async {
+  Future<UserModel>? getUserDataFuture()  {
     try {
       User? user =  auth.getCurrentUser();
-      UserModel model = await repositoryUser.getUser(user!.uid);
-      Map<String, dynamic> result = {};
-      result['firstName'] = model.firstName;
-      result['lastName'] = model.lastName;
-      result['gender'] = model.gender;
-      return result;
+      Future<UserModel> userData = repositoryUser.getUser(user!.uid);
+      return userData;
     } on FirebaseAuthException {
       return null;
     }
   }
 
-  Future<Map<String, dynamic>?> getUserDishes() async {
-    try {
-      User? user =  auth.getCurrentUser();
-      UserModel dishes = await repositoryUser.getUser(user!.uid);
-      return dishes.dishes;
-    } on FirebaseAuthException {
-      return null;
-    }
-  }
-
-  Stream<UserModel> getUserData()  {
+  Stream<UserModel>? getUserData()  {
     User? user =  auth.getCurrentUser();
-    Future<UserModel> userData =repositoryUser.getUser(user!.uid);
-    return userData.asStream();
+    if(user!=null) {
+      Future<UserModel> userData = repositoryUser.getUser(user.uid);
+      return userData.asStream();
+    }
+    else {
+      return null;
+    }
   }
 
 
@@ -416,8 +394,5 @@ class UsersController {
     return userData.asStream();
   }
 
-  double calculateBMI(double height, double weight) {
-    return (weight/(height*height));
-  }
 
 }

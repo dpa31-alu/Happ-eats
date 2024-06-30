@@ -2,7 +2,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:happ_eats/controllers/appointed_meal_controller.dart';
 import 'package:happ_eats/models/application.dart';
 import 'package:happ_eats/models/diet.dart';
 import 'package:happ_eats/models/message.dart';

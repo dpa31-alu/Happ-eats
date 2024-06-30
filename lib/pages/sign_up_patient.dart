@@ -5,6 +5,14 @@ import 'package:happ_eats/controllers/user_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:happ_eats/pages/login.dart';
 
+import '../models/application.dart';
+import '../models/appointed_meal.dart';
+import '../models/diet.dart';
+import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
+import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../utils/validators.dart';
 import 'already_logged_redirect.dart';
@@ -24,7 +32,6 @@ class SignUpPatientState extends State<SignUpPatient> {
   final _dateController = TextEditingController();
 
   String _dropdownValue = "";
-  String _dropdownValue2 = "";
 
   final _verifyPassword1 = TextEditingController();
   final _verifyPassword2 = TextEditingController();
@@ -45,7 +52,17 @@ class SignUpPatientState extends State<SignUpPatient> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    final UsersController controllerUser = UsersController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
+    final UsersController controllerUsers = UsersController(
+      db: FirebaseFirestore.instance,
+      auth: AuthService(auth: FirebaseAuth.instance,),
+      repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+      repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+      repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+      repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+      repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+      repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+      repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+      repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
 
     return  Scaffold(
       //resizeToAvoidBottomInset: false,
@@ -236,10 +253,11 @@ class SignUpPatientState extends State<SignUpPatient> {
                                         validator: (value) {
                                           return validateHeight(value);
                                         },
+                                        keyboardType: TextInputType.number,
                                         onSaved: (value){_height=value!;},
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
-                                          labelText: 'Altura (en centímetros)',
+                                          labelText: 'Altura (en metros)',
                                         ),
                                       ),
                                     ),
@@ -251,10 +269,11 @@ class SignUpPatientState extends State<SignUpPatient> {
                                         validator: (value) {
                                           return validateWeight(value);
                                         },
+                                        keyboardType: TextInputType.number,
                                         onSaved: (value){_weight=value!;},
                                         decoration: const InputDecoration(
                                           border: OutlineInputBorder(),
-                                          labelText: 'Peso (en gramos)',
+                                          labelText: 'Peso (en kilos)',
                                         ),
                                       ),
                                     ),
@@ -323,31 +342,6 @@ class SignUpPatientState extends State<SignUpPatient> {
                                     },
                                   ),
                                 ),
-                                /*
-                                const SizedBox(height: 10),
-
-                                SizedBox(
-                                  width: size.width * 0.8,
-                                  child: DropdownButtonFormField(
-                                    value: _dropdownValue2,
-                                    items: const [
-                                      DropdownMenuItem<String>(value: '', child: Text('Elija sus notificaciones.')),
-                                      DropdownMenuItem<String>(value: '0', child: Text('Activar notificación de hidratación')),
-                                      DropdownMenuItem<String>(value: '1', child: Text('No activar notificación de hidratación')),
-                                    ],
-                                    validator: (value) {
-                                      return controllerUser.validateOptions(value);
-                                    },
-                                    onChanged: (String? value) {
-                                      setState(() {
-                                        _dropdownValue2 = value!;
-                                      });
-                                    },
-                                  ),
-                                ),*/
-
-
-
                                 const SizedBox(height: 25),
                                 ElevatedButton(
                                   onPressed: () async {
@@ -355,7 +349,7 @@ class SignUpPatientState extends State<SignUpPatient> {
                                     if (_formKey.currentState!.validate()) {
                                       _formKey.currentState!.save();
 
-                                      String? result = await controllerUser.createUserPatient(_email, _password, _tel, _name, _surname, _bday,
+                                      String? result = await controllerUsers.createUserPatient(_email, _password, _tel, _name, _surname, _bday,
                                           _gender, _medicalConditions, _weight, _height);
 
                                       if(result == null && context.mounted)

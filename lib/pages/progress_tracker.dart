@@ -7,6 +7,12 @@ import 'package:happ_eats/models/dish.dart';
 import 'package:intl/intl.dart';
 
 import '../controllers/appointed_meal_controller.dart';
+import '../models/application.dart';
+import '../models/diet.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
+import '../models/user.dart';
 import '../services/auth_service.dart';
 
 class Tracker extends StatefulWidget {
@@ -21,7 +27,19 @@ class _TrackerState extends State<Tracker> {
 
 
    final AppointedMealsController _controllerMeals = AppointedMealsController(db: FirebaseFirestore.instance, repositoryDish: DishRepository(db: FirebaseFirestore.instance), repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance));
-   final UsersController _controllerUsers= UsersController(db: FirebaseFirestore.instance, auth: AuthService(auth: FirebaseAuth.instance,));
+
+   final UsersController _controllerUsers = UsersController(
+     db: FirebaseFirestore.instance,
+     auth: AuthService(auth: FirebaseAuth.instance,),
+     repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+     repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+     repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+     repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+     repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+     repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+     repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+     repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
+
    final _dateController = TextEditingController();
    late final String? _uid = _controllerUsers.getCurrentUserUid();
 
@@ -123,7 +141,7 @@ class _TrackerState extends State<Tracker> {
         body: SafeArea(
           child: Column(children: [
             Padding(
-                padding:const EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0),
+                padding:const EdgeInsets.only(right: 10.0, left: 10.0, top: 10.0, bottom: 10.0),
                 child: TextFormField(
                     controller: _dateController,
                     decoration: const InputDecoration(
@@ -141,7 +159,6 @@ class _TrackerState extends State<Tracker> {
                       );
 
                       if (pickedDate != null) {
-                        DateTime dayToday = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
 
                         DateTime dayUser = DateTime.utc(pickedDate.year, pickedDate.month, pickedDate.day);
 
@@ -149,7 +166,6 @@ class _TrackerState extends State<Tracker> {
                         {
                           setState(() {
                             _focusedDay = dayUser;
-                            print(_focusedDay);
                           });
                         }
                         _dateController.text = DateFormat('yyyy-MM-dd').format(pickedDate);
@@ -185,7 +201,6 @@ class _TrackerState extends State<Tracker> {
                   }
                   else if (snapshot.data != null) {
 
-                    print(_focusedDay);
                     _dishValues = {};
                     for (DocumentSnapshot doc in snapshot.data!.docs) {
 
@@ -252,7 +267,7 @@ class _TrackerState extends State<Tracker> {
                                       children: [
                                         ListTile(
                                           title: const Text('Camtidad en la alimentación suministrada'),
-                                          trailing: Text(numberRetrieved.toString()),
+                                          trailing: Text(numberRetrieved.toStringAsFixed(3)),
                                         ),
                                         ListTile(
                                           title: const Text('Camtidad en la alimentación recomendada'),

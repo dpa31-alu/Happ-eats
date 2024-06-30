@@ -191,8 +191,8 @@ class AppointedMealRepository {
         .where('appointedDate', isEqualTo: date).where('followedCorrectly', isEqualTo: true).snapshots();
   }
 
-  Stream<QuerySnapshot> getAllAppointmentsStream(DateTime dateStart, DateTime dateEnd, String id) {
-    return db.collection('appointedMeals').where('diet', isEqualTo: id)
+  Stream<QuerySnapshot> getAllAppointmentsStream(DateTime dateStart, DateTime dateEnd, String idPatient, idProfessional) {
+    return db.collection('appointedMeals').where('patient', isEqualTo: idPatient).where('professional', isEqualTo: idProfessional)
         .where('appointedDate', isGreaterThanOrEqualTo: dateStart).where('appointedDate', isLessThanOrEqualTo: dateEnd).snapshots();
   }
 

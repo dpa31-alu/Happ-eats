@@ -1,12 +1,18 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:happ_eats/controllers/diet_controller.dart';
 import 'package:happ_eats/pages/chat.dart';
 import 'package:happ_eats/utils/loading_dialog.dart';
 
+import '../models/application.dart';
+import '../models/diet.dart';
+import '../models/message.dart';
+import '../models/user.dart';
 import '../services/auth_service.dart';
+import '../services/file_service.dart';
 import 'calendar_professional.dart';
 
 
@@ -42,7 +48,13 @@ class _ShowPatientsState extends State<ShowPatients> {
   @override
   Widget build(BuildContext context) {
 
-    final DietsController controllerDiets = DietsController(db: FirebaseFirestore.instance, auth: AuthService(auth: FirebaseAuth.instance,));
+    final DietsController controllerDiets = DietsController(db: FirebaseFirestore.instance,
+        auth: AuthService(auth: FirebaseAuth.instance,),
+        file: FileService(auth: AuthService(auth: FirebaseAuth.instance,), storage: FirebaseStorage.instance),
+        repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+        repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+        repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+        repositoryDiets: DietRepository(db: FirebaseFirestore.instance));
 
     final Size size = MediaQuery.of(context).size;
 
@@ -50,14 +62,7 @@ class _ShowPatientsState extends State<ShowPatients> {
       //resizeToAvoidBottomInset: false,
         appBar: AppBar(
           //leading: Icon(Icons.account_circle_rounded),
-            title: const Text("Happ-eats - Professional"),
-            actions: <Widget>[
-              IconButton(
-                icon: const Icon(Icons.settings),
-                tooltip: 'Setting Icon',
-                onPressed: () {},
-              ),
-            ]
+            title: const Text("Happ-eats"),
         ),
         body: SafeArea(
             child: SingleChildScrollView(
@@ -66,12 +71,33 @@ class _ShowPatientsState extends State<ShowPatients> {
                     children: [
                       Container(
                         padding: const EdgeInsets.only(top: 10.0,),
-                        child: const Text("Tus pacientes: ", style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold,),),
+                        child: const Text("Tus pacientes: ", style: TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold,),),
                       ),
-                      Divider(),
                       SizedBox(
                         height: size.height * 0.01,
                       ),
+                      SizedBox(
+                        width: size.width * 0.8,
+                        child: DropdownButtonFormField(
+                          value: _typeSelected,
+                          items: const [
+                            DropdownMenuItem<String>(value: '', child: Text('Seleccione un modelo de dieta')),
+                            DropdownMenuItem<String>(value: 'Patología', child: Text('Dieta específica para una patología')),
+                            DropdownMenuItem<String>(value: 'Peso', child: Text('Bajar de peso')),
+                            DropdownMenuItem<String>(value: 'Musculatura', child: Text('Ganar musculatura')),
+                          ],
+                          onChanged: (String? value) {
+                            setState(() {
+                              _typeSelected = value!;
+                            });
+
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: size.height * 0.01,
+                      ),
+
                       StreamBuilder(
                           stream: controllerDiets.retrieveAllDiets(_typeSelected, _amount),
                           builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
@@ -104,7 +130,7 @@ class _ShowPatientsState extends State<ShowPatients> {
                                 child: Column(
                                   children: [
                                     SizedBox(
-                                      height: size.height * 0.4,
+                                      height: size.height * 0.3,
                                     ),
                                     const Center(child: Text("No hay pacientes de esta categoría"),)
                                   ],
@@ -114,26 +140,6 @@ class _ShowPatientsState extends State<ShowPatients> {
                             else {
                               return Column(
                                 children: [
-                                  SizedBox(
-                                    width: size.width * 0.8,
-                                    child: DropdownButtonFormField(
-                                      value: _typeSelected,
-                                      items: const [
-                                        DropdownMenuItem<String>(value: '', child: Text('Seleccione un modelo de dieta')),
-                                        DropdownMenuItem<String>(value: 'Patología', child: Text('Dieta específica para una patología')),
-                                        DropdownMenuItem<String>(value: 'Peso', child: Text('Bajar de peso')),
-                                        DropdownMenuItem<String>(value: 'Musculatura', child: Text('Ganar musculatura')),
-                                      ],
-                                      onChanged: (String? value) {
-                                        setState(() {
-                                          _typeSelected = value!;
-                                        });
-
-                                      },
-                                    ),
-                                  ),
-
-
                                   ListView.builder(
                                     controller: _scrollController,
                                     padding: const EdgeInsets.only(right: 10.0, left: 10.0),
@@ -144,7 +150,7 @@ class _ShowPatientsState extends State<ShowPatients> {
                                       return Card(
                                         child:  ExpansionTile(
                                           title: Text(snapshot.data.docs[index]['firstName'] + " " + snapshot.data.docs[index]['lastName']),
-                                          subtitle: Text("Año de nacimiento: "  + snapshot.data.docs[index]["birthday"].toDate().year.toString() + " y género: " + snapshot.data.docs[index]["gender"]),
+                                          subtitle: Text("Año de nacimiento: ${snapshot.data.docs[index]["birthday"].toDate().year.toString()} y género: ${snapshot.data.docs[index]["gender"]}"),
                                           leading: const Icon(Icons.account_circle),
                                           children:<Widget>[
                                             ListTile(
@@ -156,8 +162,12 @@ class _ShowPatientsState extends State<ShowPatients> {
                                               subtitle: Text(snapshot.data.docs[index]["objectives"].toString()),
                                             ),
                                             ListTile(
-                                              title: const Text("Altura y peso"),
-                                              subtitle: Text(snapshot.data.docs[index]["height"].toString() + " " + snapshot.data.docs[index]["weight"].toString()),
+                                              title: const Text("Altura"),
+                                              subtitle: Text("${snapshot.data.docs[index]["height"].toStringAsFixed(2)}"),
+                                            ),
+                                            ListTile(
+                                              title: const Text("Peso"),
+                                              subtitle: Text("${snapshot.data.docs[index]["weight"].toStringAsFixed(2)}"),
                                             ),
                                             ListTile(
                                               title: const Text("Programar comidas: "),
@@ -166,7 +176,7 @@ class _ShowPatientsState extends State<ShowPatients> {
                                                       DocumentSnapshot doc = snapshot.data.docs[index];
                                                       Navigator.push(
                                                         context,
-                                                        MaterialPageRoute(builder: (context) =>  CalendarProfessional(dietID: doc.id, professional: doc['professional'], patient: doc['patient'],)),
+                                                        MaterialPageRoute(builder: (context) =>  CalendarProfessional(dietID: doc.id, professionalID: doc['professional'], patientID: doc['patient'],)),
                                                       );
                                                     },
                                                     icon: const Icon(Icons.add, size: 30,),
@@ -177,7 +187,7 @@ class _ShowPatientsState extends State<ShowPatients> {
                                               trailing: IconButton(
                                                 onPressed: () async {
                                                   loadingDialog(context);
-                                                  String? result = await controllerDiets.addFile(snapshot.data.docs[index].id);
+                                                  String? result = await controllerDiets.addFile(snapshot.data.docs[index].id, snapshot.data.docs[index]['patient']);
 
                                                   if(result!=null && context.mounted) {
                                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -195,7 +205,7 @@ class _ShowPatientsState extends State<ShowPatients> {
                                               ),
                                             ),
                                             ListTile(
-                                              title: Text("Chat: "),
+                                              title: const Text("Chat: "),
                                               trailing: IconButton(
                                                 onPressed: () async {
                                                   Navigator.push(

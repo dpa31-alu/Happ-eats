@@ -1,17 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:happ_eats/controllers/application_controller.dart';
 
 
-import 'package:happ_eats/controllers/message_controller.dart';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:happ_eats/models/application.dart';
 import 'package:happ_eats/models/appointed_meal.dart';
 import 'package:happ_eats/models/diet.dart';
-import 'package:happ_eats/models/dish.dart';
 import 'package:happ_eats/models/message.dart';
 import 'package:happ_eats/models/patient.dart';
 import 'package:happ_eats/models/user.dart';
@@ -40,7 +37,7 @@ import 'application_controller_test.mocks.dart';
 
 
 void main() {
-  group('Test AppointedMeal Controller', () {
+  group('Test Appplication Controller', () {
 
 
     final MockAuthService authService = MockAuthService();
@@ -118,11 +115,6 @@ void main() {
           'date': date2,
         });
       }
-
-
-      //when(authService.getCurrentUser()).thenAnswer((realInvocation) => auth.currentUser);
-
-      //when(applicationRepository.getAllApplicationsByType(any, any)).thenAnswer((realInvocation) => firestore.collection('dishes').where('user', isEqualTo: uid).limit(20).snapshots());
 
       when(applicationRepository.getAllApplicationsByType(any, any)).thenAnswer((realInvocation) => firestore.collection('applications').where('state', isEqualTo: 'Pending').where('type', isEqualTo: 'Patología').orderBy('date', descending: true).limit(20).snapshots());
 
@@ -280,14 +272,12 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
 
       ApplicationsController controller = ApplicationsController(db: firestore, auth: authService, file: fileService,
           repositoryUser: userRepository, repositoryPatient: patientRepository,
           repositoryAppointedMeal: appointedMealRepository, repositoryApplication: applicationRepository,
           repositoryMessages: messageRepository, repositoryDiets: dietRepository);
 
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye', message: 'error'));
 
@@ -344,6 +334,7 @@ void main() {
       DateTime focusedDay = DateTime.utc(DateTime.now().year, DateTime.now().month, DateTime.now().day);
       for(int i = 0; i < 21; i++) {
         firestore.collection('appointedMeals').doc('$i').set({'patient': uid,'appointedDate': focusedDay, 'followedCorrectly':true});
+        firestore.collection('chatrooms').doc('$uid$uid').collection('messages').doc('$i').set({'toId': uid});
       }
 
       WriteBatch batch2 = firestore.batch();
@@ -356,6 +347,10 @@ void main() {
         batch2.delete(firestore.collection('appointedMeals')
             .doc(docu.id));
       }
+      for(DocumentSnapshot docu in docs.docs) {
+        batch2.delete(firestore.collection('chatrooms').doc('$uid$uid').collection('messages').doc(docu.id));
+      }
+      batch2.delete(firestore.collection('chatrooms').doc('$uid$uid'));
 
 
       when(applicationRepository.deleteApplication(any, 'test')).thenAnswer((realInvocation) async =>
@@ -367,22 +362,50 @@ void main() {
       when(appointedMealRepository.deleteAllUserMeals(any, uid)).thenAnswer((realInvocation) async =>
       batch2
       );
-
-      expect(await controller.cancelApplication(uid, null),
-          null
+      when(messageRepository.deleteAllUserMessages(any, "$uid$uid")).thenAnswer((realInvocation) async =>
+      batch2
       );
+
+
 
       DocumentSnapshot<Map<String, dynamic>> snap = await firestore.collection('applications').doc('test').get();
       expect(snap.data()!['user'], uid);
       DocumentSnapshot<Map<String, dynamic>> snap2 = await firestore.collection('diets').doc('test').get();
       expect(snap2.data()!['patient'], uid);
       DocumentSnapshot<Map<String, dynamic>> snap3 = await firestore.collection('appointedMeals').doc('1').get();
-      expect(snap2.data()!['patient'], uid);
+      expect(snap3.data()!['patient'], uid);
+      DocumentSnapshot<Map<String, dynamic>> snap4 = await firestore.collection('chatrooms').doc('$uid$uid').collection('messages').doc('1').get();
+      expect(snap4.data()!['toId'], uid);
 
-      /*
-      DocumentSnapshot<Map<String, dynamic>> snap = await firestore.collection('applications').doc('test').get();
-      expect(snap.data()!['state'], 'Accepted');
-*/
+      expect(await controller.cancelApplication('test', {
+        'uid': 'test',
+        'patient': uid,
+        'professional': uid,
+        'firstName': 'newFirstName',
+        'lastName':'newLastName',
+        'gender': 'newGender',
+        'medicalCondition': 'newMedicalCondition',
+        'weight': 100.0,
+        'height': 150.0,
+        'birthday': date1,
+        'objectives': 'newObjectives',
+        'type': 'newType',
+        'date': DateTime.timestamp(),
+      }),
+          null
+      );
+
+
+      DocumentSnapshot<Map<String, dynamic>> snap5 = await firestore.collection('applications').doc('test').get();
+      expect(snap5.data(), null);
+      DocumentSnapshot<Map<String, dynamic>> snap6 = await firestore.collection('diets').doc('test').get();
+      expect(snap6.data(), null);
+      DocumentSnapshot<Map<String, dynamic>> snap7 = await firestore.collection('appointedMeals').doc('1').get();
+      expect(snap7.data(), null);
+      DocumentSnapshot<Map<String, dynamic>> snap8 = await firestore.collection('chatrooms').doc('$uid$uid').collection('messages').doc('1').get();
+      expect(snap8.data(), null);
+
+
 
     });
 
@@ -396,8 +419,6 @@ void main() {
           repositoryUser: userRepository, repositoryPatient: patientRepository,
           repositoryAppointedMeal: appointedMealRepository, repositoryApplication: applicationRepository,
           repositoryMessages: messageRepository, repositoryDiets: dietRepository);
-
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye', message: 'error'));
 

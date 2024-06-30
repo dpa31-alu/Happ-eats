@@ -5,8 +5,15 @@ import 'package:happ_eats/pages/already_logged_redirect.dart';
 import 'package:happ_eats/pages/sign_up_selector.dart';
 
 import '../controllers/user_controller.dart';
+import '../models/application.dart';
+import '../models/appointed_meal.dart';
+import '../models/diet.dart';
+import '../models/dish.dart';
+import '../models/message.dart';
+import '../models/patient.dart';
+import '../models/professional.dart';
+import '../models/user.dart';
 import '../services/auth_service.dart';
-import '../utils/validators.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -27,8 +34,17 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
 
-    final UsersController controllerUser = UsersController(db: FirebaseFirestore.instance,  auth: AuthService(auth: FirebaseAuth.instance,));
-
+    final UsersController controllerUser = UsersController(
+      db: FirebaseFirestore.instance,
+      auth: AuthService(auth: FirebaseAuth.instance,),
+      repositoryUser: UserRepository(db: FirebaseFirestore.instance),
+      repositoryProfessional: ProfessionalRepository(db: FirebaseFirestore.instance),
+      repositoryMessages: MessageRepository(db: FirebaseFirestore.instance),
+      repositoryPatient: PatientRepository(db: FirebaseFirestore.instance),
+      repositoryDish: DishRepository(db: FirebaseFirestore.instance),
+      repositoryAppointedMeal: AppointedMealRepository(db: FirebaseFirestore.instance),
+      repositoryApplication: ApplicationRepository(db: FirebaseFirestore.instance),
+      repositoryDiets: DietRepository(db: FirebaseFirestore.instance),);
     final Size size = MediaQuery.of(context).size;
 
     return  Scaffold(
@@ -67,7 +83,7 @@ class LoginPageState extends State<LoginPage> {
                     height: size.height * 0.4,
                     width: size.width * 0.70,
                     decoration: const BoxDecoration(
-                        color: Colors.lightBlue,
+                        color: Colors.lightBlueAccent,
                         shape: BoxShape.circle
                     ),
                   ),
@@ -79,7 +95,7 @@ class LoginPageState extends State<LoginPage> {
                     height: size.height * 0.4,
                     width: size.width * 0.80,
                     decoration: const BoxDecoration(
-                        color: Colors.lightBlueAccent,
+                        color: Colors.lightBlue,
                         shape: BoxShape.circle
                     ),
                   ),

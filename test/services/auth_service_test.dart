@@ -11,12 +11,12 @@ void main() {
   group('Test Auth', ()  {
 
     test('User can sign in with user and password', () async {
-      MockFirebaseAuth _auth = MockFirebaseAuth();
-      AuthService a = AuthService(auth: _auth);
+      MockFirebaseAuth auth0 = MockFirebaseAuth();
+      AuthService a = AuthService(auth: auth0);
 
       a.createUser('wa@wa.com', '123456789');
 
-      expect(_auth.currentUser, isNotNull);
+      expect(auth0.currentUser, isNotNull);
 
 
     });

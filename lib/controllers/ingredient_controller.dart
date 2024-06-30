@@ -1,11 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:happ_eats/models/ingredient.dart';
 
 
 class IngredientsController {
 
   final FirebaseFirestore db;
 
-  final repositoryIngredient;
+  final IngredientRepository repositoryIngredient;
 
   IngredientsController({required this.db, required this.repositoryIngredient});
 
