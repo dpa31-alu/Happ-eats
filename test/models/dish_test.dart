@@ -25,6 +25,7 @@ void main()  {
 
       for(int i = 0; i < 21; i++) {
         firestore.collection('dishes').doc().set({'user' : uid, 'name': 'torrezno'});
+        firestore.collection('dishes').doc().set({'user' : 'otrouid', 'name': 'torrezno'});
       }
 
       repository.getAllDishes(20, uid).listen(expectAsync1 ((snap) {

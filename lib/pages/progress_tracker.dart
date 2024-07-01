@@ -271,7 +271,7 @@ class _TrackerState extends State<Tracker> {
                                         ),
                                         ListTile(
                                           title: const Text('Camtidad en la alimentación recomendada'),
-                                          trailing: Text(numberMax.toString()),
+                                          trailing: Text(numberMax.toStringAsFixed(3)),
                                         ),
                                       ]
                                   ),

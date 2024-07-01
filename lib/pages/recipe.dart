@@ -90,9 +90,7 @@ class ShowRecipe extends StatelessWidget {
 
     final size = MediaQuery.of(context).size;
     return Scaffold(
-      //resizeToAvoidBottomInset: false,
        appBar: AppBar(
-         //leading: Icon(Icons.account_circle_rounded),
           title: const Text("Happ-eats"),
            actions: (controllerUsers.getCurrentUserUid()==dishUser)? <Widget>[
              IconButton(
