@@ -111,6 +111,7 @@ class MessageRepository {
   /// Returns a write batch
   Future<WriteBatch> deleteAllUserMessages(WriteBatch batch, String uid) async {
 
+
     QuerySnapshot<Map<String, dynamic>> docs = await db.collection('chatrooms').doc(uid).collection('messages').get();
     for(DocumentSnapshot docu in docs.docs) {
       batch.delete(db.collection('chatrooms').doc(uid).collection('messages').doc(docu.id));

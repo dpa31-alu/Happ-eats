@@ -258,14 +258,14 @@ class UsersController {
           if(diet['url']!=null)
             {
               FileService fileService = FileService(storage: FirebaseStorage.instance, auth: auth);
-              String? result = await fileService.deleteFile(diet['url']);
+              String? result = await fileService.deleteFile(diet['url'], user.uid, diet['professional']);
               if(result != null)
               {
                 return result;
               }
             }
           batch = await repositoryDiets.deleteDiet(batch, diet['uid']);
-          batch = await repositoryAppointedMeal.deleteAllUserMeals(batch, user.uid);
+          batch = await repositoryAppointedMeal.deleteAllUserMeals(batch, user.uid, true);
           List<String> ids = [diet['patient'], diet['professional']];
           ids.sort();
           String messageUid = ids.join();
@@ -330,33 +330,39 @@ class UsersController {
 
          QuerySnapshot<Map<String, dynamic>> diets = await repositoryDiets.getAllDietsForProfessional(user!.uid);
 
-         for (DocumentSnapshot docu in diets.docs)
+         for (DocumentSnapshot<Map<String, dynamic>> docu in diets.docs)
            {
-               if(docu['url']!=null)
+
+               if(docu.data()!['url']!=null)
                {
                  FileService fileService = FileService(storage: FirebaseStorage.instance, auth: auth);
-                 String? result = await fileService.deleteFile(docu['url']);
+                 String? result = await fileService.deleteFile(docu['url'], docu['patient'], user.uid);
                  if(result != null)
                  {
                    return result;
                  }
                }
-               batch = await repositoryDiets.deleteDiet(batch, docu['uid']);
-               batch = await repositoryAppointedMeal.deleteAllUserMeals(batch, docu['patient']);
+               batch = await repositoryDiets.deleteDiet(batch, docu.id);
+               batch = await repositoryAppointedMeal.deleteAllUserMeals(batch, user.uid, false);
                List<String> ids = [docu['patient'], docu['professional']];
                ids.sort();
                String messageUid = ids.join();
                batch = await repositoryMessages.deleteAllUserMessages(batch, messageUid);
            }
 
-       QuerySnapshot query = await repositoryDish.getAllDishesFuture(user.uid);
-       for(DocumentSnapshot docu in query.docs) {
+       QuerySnapshot<Map<String, dynamic>> query = await repositoryDish.getAllDishesFuture(user.uid);
+       for(DocumentSnapshot<Map<String, dynamic>> docu in query.docs) {
          FileService fileService = FileService(storage: FirebaseStorage.instance, auth: auth);
-         String? resultImage = await fileService.deleteImage(docu['image']);
-         if (resultImage!=null)
-         {
-           return resultImage;
-         }
+
+         if(docu.data()!['image']!=null)
+           {
+
+             String? resultImage = await fileService.deleteImage(docu['image']);
+             if (resultImage!=null)
+             {
+               return resultImage;
+             }
+           }
          batch.delete(db.collection('dishes')
              .doc(docu.id));
        }

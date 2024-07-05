@@ -212,14 +212,23 @@ class AppointedMealRepository {
   }
 
   /// Method for adding all appointed meals' deletion to the batch
-  /// Requires the batch and user id
+  /// Requires the batch and user id, and if the user is a patient or not
   /// Returns a write batch
-  Future<WriteBatch> deleteAllUserMeals(WriteBatch batch, String id) async {
+  Future<WriteBatch> deleteAllUserMeals(WriteBatch batch, String id, bool isPatient) async {
 
-    QuerySnapshot<Map<String, dynamic>> docs = await db.collection('appointedMeals').where('patient', isEqualTo: id).get();
-    for(DocumentSnapshot docu in docs.docs) {
-      batch.delete(db.collection('appointedMeals')
-          .doc(docu.id));
+    if(isPatient) {
+      QuerySnapshot<Map<String, dynamic>> docs = await db.collection('appointedMeals').where('patient', isEqualTo: id).get();
+      for(DocumentSnapshot docu in docs.docs) {
+        batch.delete(db.collection('appointedMeals')
+            .doc(docu.id));
+      }
+      }
+    else {
+      QuerySnapshot<Map<String, dynamic>> docs = await db.collection('appointedMeals').where('professional', isEqualTo: id).get();
+      for(DocumentSnapshot docu in docs.docs) {
+        batch.delete(db.collection('appointedMeals')
+            .doc(docu.id));
+      }
     }
     return batch;
   }

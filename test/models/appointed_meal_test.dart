@@ -193,7 +193,7 @@ void main()  {
 
 
       WriteBatch batch = firestore.batch();
-      batch = await repository.deleteAllUserMeals(batch, uid);
+      batch = await repository.deleteAllUserMeals(batch, uid, true);
       await batch.commit();
 
       QuerySnapshot<Map<String, dynamic>> a = await firestore.collection('appointedMeals').get();

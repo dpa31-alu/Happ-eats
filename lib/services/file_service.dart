@@ -75,7 +75,8 @@ class FileService {
    Future<String?> uploadDietFile(FilePickerResult file, String patient) async {
 
     File c = File(file.files.single.path.toString());
-    String fileName = file.names.toString();
+    String fileName = "dieta.pdf";
+
 
     Reference fileDirection = storage.ref().child("users").child(auth.getCurrentUser()!.uid.toString()).child('diets').child(patient).child(fileName);
     UploadTask task = fileDirection.putFile(c);
@@ -86,9 +87,9 @@ class FileService {
   /// Deletes the file of a diet
   /// Requires the name of the file
   /// Returns null, or a string containing an error
-   Future<String?> deleteFile(String fileName) async {
+   Future<String?> deleteFile(String fileName, String userPatient, String userProfessional) async {
     try {
-      await storage.ref().child("users").child(auth.getCurrentUser()!.uid.toString()).child('diet').child(fileName).delete();
+      await storage.ref().child("users").child(userProfessional).child('diets').child(userPatient).child(fileName).delete();
     } on FirebaseException catch (ex) {
       return ex.message;
     }

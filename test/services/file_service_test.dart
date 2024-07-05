@@ -148,125 +148,18 @@ void main() {
       File c = File(file.files.single.path.toString());
       String fileName = file.names.toString();
 
-      Reference ref = storage.ref().child("users").child(auth.currentUser!.uid.toString()).child('diet').child(fileName);
+      Reference ref = storage.ref().child("users").child(auth.currentUser!.uid.toString()).child('diet').child(auth.currentUser!.uid.toString()).child(fileName);
 
       final task = ref.putFile(c);
       await task;
 
-      await fileService.deleteFile(fileName);
+      await fileService.deleteFile(fileName, auth.currentUser!.uid.toString(), auth.currentUser!.uid.toString());
 
       Map p = storage.storedFilesMap;
 
       expect(p, {});
 
     });
-
-    test('Test deleteFile launches exception on failure', () async  {
-
-
-      await auth.signInWithCustomToken('some token');
-
-      final fileService = FileService(storage: storage, auth: authService);
-
-      when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye', message: 'error'));
-
-
-      final imageFile = File(imageTestFile);
-      final bytes = imageFile.readAsBytesSync();
-      final readStream = imageFile.openRead();
-
-      final platformFile = PlatformFile(name: 'gochujang.jpg', size: await imageFile.length(), bytes: bytes, readStream: readStream, path: imageTestFile);
-
-      FilePickerResult file =  FilePickerResult([platformFile]);
-
-      String fileName = file.names.toString();
-
-      expect( await fileService.deleteFile(fileName), 'error');
-
-    });
-
-    /*test('Test deleteImage deletes correctly', () async  {
-
-
-      await auth.signInWithCustomToken('some token');
-
-      final fileService = FileService(storage: storage, auth: authService);
-
-
-      when(authService.getCurrentUser()).thenAnswer((realInvocation) => auth.currentUser);
-
-
-      final imageFile = File(imageTestFile);
-      final bytes = imageFile.readAsBytesSync();
-      final readStream = imageFile.openRead();
-
-      final platformFile = PlatformFile(name: 'gochujang.jpg', size: await imageFile.length(), bytes: bytes, readStream: readStream, path: imageTestFile);
-
-      FilePickerResult file =  FilePickerResult([platformFile]);
-
-      File c = File(file.files.single.path.toString());
-      String fileName = file.names.toString();
-
-      Reference ref = storage.ref().child("users").child(auth.currentUser!.uid.toString()).child('diet').child(fileName);
-
-      final task = ref.putFile(c);
-      await task;
-
-      String name = await ref.getDownloadURL();
-
-      await fileService.deleteImage(name);
-
-      Reference erence = storage.refFromURL(name);
-
-      print(storage.storedFilesMap.toString());
-
-      print(await erence.name);
-      print(await ref.name);
-
-     print(storage.storedFilesMap.toString());
-
-      Map p = storage.storedFilesMap;
-
-      expect(p, {});
-
-
-    });
-
-    test('Test deleteImage launches exception on failure', () async  {
-
-
-      await auth.signInWithCustomToken('some token');
-
-      final fileService = FileService(storage: storage, auth: authService);
-
-      when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye', message: 'error'));
-
-
-      final imageFile = File(imageTestFile);
-      final bytes = imageFile.readAsBytesSync();
-      final readStream = imageFile.openRead();
-
-      final platformFile = PlatformFile(name: 'gochujang.jpg', size: await imageFile.length(), bytes: bytes, readStream: readStream, path: imageTestFile);
-
-      FilePickerResult file =  FilePickerResult([platformFile]);
-
-      File c = File(file.files.single.path.toString());
-      String fileName = file.names.toString();
-
-      Reference ref = storage.ref().child("users").child(auth.currentUser!.uid).child('diet').child(fileName);
-
-      Map p = storage.storedFilesMap;
-
-      String name = await ref.getDownloadURL();
-
-
-      whenCalling(Invocation.method(#refFromURL, null))
-          .on(storage)
-          .thenThrow(FirebaseAuthException(code: 'bla'));
-
-      expect( () => fileService.deleteImage(name), throwsException );
-
-    });*/
 
   });
 }

@@ -284,7 +284,7 @@ void main() {
       expect(await controller.createApplication('newObjectives', 'newType'),'error');
     });
 
-    test('cancelApplication creates correctly', () async {
+    test('cancelApplication deletes correctly', () async {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
@@ -359,7 +359,7 @@ void main() {
       when(dietRepository.deleteDiet(any, 'test')).thenAnswer((realInvocation) async =>
       batch2
       );
-      when(appointedMealRepository.deleteAllUserMeals(any, uid)).thenAnswer((realInvocation) async =>
+      when(appointedMealRepository.deleteAllUserMeals(any, uid, true)).thenAnswer((realInvocation) async =>
       batch2
       );
       when(messageRepository.deleteAllUserMessages(any, "$uid$uid")).thenAnswer((realInvocation) async =>

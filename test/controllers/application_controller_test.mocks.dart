@@ -424,10 +424,19 @@ class MockFileService extends _i1.Mock implements _i10.FileService {
       ) as _i9.Future<String?>);
 
   @override
-  _i9.Future<String?> deleteFile(String? fileName) => (super.noSuchMethod(
+  _i9.Future<String?> deleteFile(
+    String? fileName,
+    String? userPatient,
+    String? userProfessional,
+  ) =>
+      (super.noSuchMethod(
         Invocation.method(
           #deleteFile,
-          [fileName],
+          [
+            fileName,
+            userPatient,
+            userProfessional,
+          ],
         ),
         returnValue: _i9.Future<String?>.value(),
         returnValueForMissingStub: _i9.Future<String?>.value(),
@@ -1486,6 +1495,7 @@ class MockAppointedMealRepository extends _i1.Mock
   _i9.Future<_i5.WriteBatch> deleteAllUserMeals(
     _i5.WriteBatch? batch,
     String? id,
+    bool? isPatient,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -1493,6 +1503,7 @@ class MockAppointedMealRepository extends _i1.Mock
           [
             batch,
             id,
+            isPatient,
           ],
         ),
         returnValue: _i9.Future<_i5.WriteBatch>.value(_FakeWriteBatch_5(
@@ -1502,6 +1513,7 @@ class MockAppointedMealRepository extends _i1.Mock
             [
               batch,
               id,
+              isPatient,
             ],
           ),
         )),
@@ -1513,6 +1525,7 @@ class MockAppointedMealRepository extends _i1.Mock
             [
               batch,
               id,
+              isPatient,
             ],
           ),
         )),

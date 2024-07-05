@@ -84,14 +84,14 @@ class ApplicationsController {
         {
           if(diet['url']!=null)
             {
-              String? result = await file.deleteFile(diet['url']);
+              String? result = await file.deleteFile(diet['url'], currentUser!.uid ,diet['professional']);
               if(result != null)
               {
                 return result;
               }
             }
           batch = await repositoryDiets.deleteDiet(batch, diet['uid']);
-          batch = await repositoryAppointedMeal.deleteAllUserMeals(batch, currentUser!.uid);
+          batch = await repositoryAppointedMeal.deleteAllUserMeals(batch, currentUser!.uid, true);
           List<String> ids = [diet['patient'], diet['professional']];
           ids.sort();
           String messageUid = ids.join();

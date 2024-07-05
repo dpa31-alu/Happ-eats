@@ -272,6 +272,7 @@ class MockAppointedMealRepository extends _i1.Mock
   _i4.Future<_i2.WriteBatch> deleteAllUserMeals(
     _i2.WriteBatch? batch,
     String? id,
+    bool? isPatient,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -279,6 +280,7 @@ class MockAppointedMealRepository extends _i1.Mock
           [
             batch,
             id,
+            isPatient,
           ],
         ),
         returnValue: _i4.Future<_i2.WriteBatch>.value(_FakeWriteBatch_1(
@@ -288,6 +290,7 @@ class MockAppointedMealRepository extends _i1.Mock
             [
               batch,
               id,
+              isPatient,
             ],
           ),
         )),
@@ -299,6 +302,7 @@ class MockAppointedMealRepository extends _i1.Mock
             [
               batch,
               id,
+              isPatient,
             ],
           ),
         )),

@@ -63,15 +63,11 @@ class RedirectLogin extends StatelessWidget {
                     return  const SafeArea(child: Center(child: CircularProgressIndicator(),));
                   }
                   else if (snapshot2.data == true) {
-                    /*Navigator.pushReplacement(context,  MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const MenuPatient(),
-                    ),);*/
+
                     return  const MenuPatient();
                   }
                   else {
-                   /* Navigator.pushReplacement(context,  MaterialPageRoute<void>(
-                      builder: (BuildContext context) => const MenuProfessional(),
-                    ),);*/
+
                     return const MenuProfessional();
                   }
 

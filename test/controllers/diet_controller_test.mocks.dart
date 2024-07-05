@@ -412,10 +412,19 @@ class MockFileService extends _i1.Mock implements _i9.FileService {
       ) as _i8.Future<String?>);
 
   @override
-  _i8.Future<String?> deleteFile(String? fileName) => (super.noSuchMethod(
+  _i8.Future<String?> deleteFile(
+    String? fileName,
+    String? userPatient,
+    String? userProfessional,
+  ) =>
+      (super.noSuchMethod(
         Invocation.method(
           #deleteFile,
-          [fileName],
+          [
+            fileName,
+            userPatient,
+            userProfessional,
+          ],
         ),
         returnValue: _i8.Future<String?>.value(),
         returnValueForMissingStub: _i8.Future<String?>.value(),
