@@ -16,7 +16,7 @@ import '../services/auth_service.dart';
 import '../utils/validators.dart';
 import 'already_logged_redirect.dart';
 
-
+/// View for singing up a professional
 class SignUpProfessional extends StatefulWidget {
   const SignUpProfessional ({super.key});
 

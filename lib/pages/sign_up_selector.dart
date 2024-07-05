@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:happ_eats/pages/sign_up_patient.dart';
 import 'package:happ_eats/pages/sign_up_professional.dart';
 
+
+
+/// View for choosing the type of user to sign up
 class SignUpSelector extends StatelessWidget {
   const SignUpSelector({super.key});
 

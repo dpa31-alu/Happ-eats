@@ -428,92 +428,12 @@ class IngredientRepository{
 
   IngredientRepository({required this.db});
 
+  /// Retrieves all the ingredients from the database
+  /// Modifies them to be manageable
+  /// Returns a query snapshot
   Future<QuerySnapshot<Map<String, dynamic>>> getAllIngredients() {
     return db.collection('ingredients').get();
   }
 
-/*
-  Future<void> crearcosis() async {
-    FirebaseFirestore.instance.collection('ingredients').add(
-      { 'ingredients': [
-        {
-          'name': 'Patata',
-          'Calorías (kcal)': 88.0,
-          'Proteínas (g)': 2.5,
-          'Lípidos totales (g)': 0.2,
-          'AG saturados (g)': 0.04,
-          'AG monoinsaturados (g)': 0.01,
-          'AG poliinsaturados (g)': 0.12,
-          'Omega-3 (g)' : 0.027,
-          'C18:2 Linoleico (omega-6) (g)' : 0.09,
-          'Colesterol (mg/1000 kcal)' : 0.0,
-          'Hidratos de carbono (g)': 18.0,
-          'Fibra (g)': 2.0,
-          'Agua (g)': 77.3,
 
-          'Calcio (mg)': 9.0,
-          'Hierro (mg)': 0.6,
-          'Yodo (µg)': 3.0,
-          'Magnesio (mg)': 25.0,
-          'Zinc (mg)': 0.3,
-          'Sodio (mg)': 7.0,
-          'Potasio (mg)': 570.0,
-          'Fósforo (mg)': 50.0,
-          'Selenio (μg)': 1.0,
-
-          'Tiamina (mg)': 0.1,
-          'Riboflavina (mg)': 0.04,
-          'Equivalentes niacina (mg)': 1.5,
-          'Vitamina B6 (mg)': 0.25,
-          'Folatos (μg)': 12.0,
-          'Vitamina B12 (μg)': 0.0,
-          'Vitamina C (mg)': 18.0,
-          'Vitamina A: Eq. Retinol (μg)': 0.0,
-          'Vitamina D (μg)': 0.0,
-          'Vitamina E (mg)': 0.1,
-          'trazas': 'No'
-        },
-        {
-          'name': 'Aceite de oliva',
-          'Calorías (kcal)': 899,
-          'Proteínas (g)': 0,
-          'Lípidos totales (g)': 99.9,
-          'AG saturados (g)': 16.6,
-          'AG monoinsaturados (g)': 70.99,
-          'AG poliinsaturados (g)': 10.49,
-          'Omega-3 (g)' : 0.547,
-          'C18:2 Linoleico (omega-6) (g)' : 9.943,
-          'Colesterol (mg/1000 kcal)' : 0,
-          'Hidratos de carbono (g)': 0,
-          'Fibra (g)': 0,
-          'Agua (g)': 0.1,
-
-          'Calcio (mg)': 0,
-          'Hierro (mg)': 0.4,
-          'Yodo (µg)': 0,
-          'Magnesio (mg)': 0,
-          'Zinc (mg)': 0,
-          'Sodio (mg)': 0,
-          'Potasio (mg)': 0,
-          'Fósforo (mg)': 1,
-          'Selenio (μg)': 0,
-
-          'Tiamina (mg)': 0,
-          'Riboflavina (mg)': 0,
-          'Equivalentes niacina (mg)': 0,
-          'Vitamina B6 (mg)': 0,
-          'Folatos (μg)': 0,
-          'Vitamina B12 (μg)': 0,
-          'Vitamina C (mg)': 18,
-          'Vitamina A: Eq. Retinol (μg)': 0,
-          'Vitamina D (μg)': 0,
-          'Vitamina E (mg)': 5.1,
-          'trazas': 'Proteinas, calcio, magnesio, zinc, sodio, '
-              'potasio, selenio, tiamina, riboflavina, equivalentes niacina,'
-              ' vitamina b6, folatos, Vitamina A'
-        }
-      ]},
-    );
-  }
-  */
 }

@@ -83,10 +83,16 @@ class MessageRepository {
 
   MessageRepository({required this.db});
 
+  /// Method for retrieving all messages for a certain conversation as a stream
+  /// Requires the uid of the chatroom and the amount
+  /// Returns a stream
   Stream<QuerySnapshot?> getMessagesForAmount(int amount, String uid) {
     return db.collection('chatrooms').doc(uid).collection('messages').limit(amount).orderBy('timestamp', descending: true).snapshots();
   }
 
+  /// Method for adding a message's creation to a batch
+  /// Requires the batch, id, id of sender, id of reciever and text
+  /// Returns a write batch
   Future<WriteBatch> sendMessage(WriteBatch batch, String uid, String toID, String fromID, String text) async {
 
     batch.set(db.collection('chatrooms').doc(uid).collection('messages')
@@ -100,6 +106,9 @@ class MessageRepository {
 
   }
 
+  /// Method for adding all of a user's messages' deletion to a batch
+  /// Requires the batch nad id of the chatroom
+  /// Returns a write batch
   Future<WriteBatch> deleteAllUserMessages(WriteBatch batch, String uid) async {
 
     QuerySnapshot<Map<String, dynamic>> docs = await db.collection('chatrooms').doc(uid).collection('messages').get();

@@ -18,6 +18,7 @@ import '../models/patient.dart';
 import '../utils/validators.dart';
 
 
+/// View for creating applications, displaying their info and status, and deleting them. It also allows for the download of the diet file.
 class ApplicationPatient extends StatefulWidget {
   const ApplicationPatient({super.key});
 
@@ -449,25 +450,22 @@ class ApplicationPatientState extends State<ApplicationPatient> {
                                          loadingDialog(context);
                                          Map diet = await _controllerDiets.retrieveDietForUser();
                                          String? result = "Todavía no se ha asignado una archivo a su dieta";
+                                         String? urlDownload;
                                          if (diet.isNotEmpty&&diet['url']!=null) {
-                                            FileService storage = FileService(storage: FirebaseStorage.instance, auth: AuthService( auth: FirebaseAuth.instance));
 
-                                            String? urlDownload = await _controllerDiets.downloadFile(diet['url'], diet['professional'], diet['patient']);
+                                             urlDownload = await _controllerDiets.downloadFile(diet['url'], diet['professional'], diet['patient']);
 
                                             if (urlDownload != null)
                                               {
                                                 Uri url = Uri.parse(urlDownload);
                                                 launchUrl(url);
                                               }
-
-
-                                            //result = await _controllerDiets.downloadFile(diet['professional'], diet['url']);
                                          }
                                          if(context.mounted)
                                          {
                                            Navigator.pop(context);
                                          }
-                                         if(context.mounted&&result!=null)
+                                         if(context.mounted&&urlDownload==null)
                                            {
                                              ScaffoldMessenger.of(context).showSnackBar(
                                                  SnackBar(content: Text(result),)

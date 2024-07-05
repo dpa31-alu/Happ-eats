@@ -18,6 +18,7 @@ import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../services/file_service.dart';
 
+/// View for displaying a recipe data and allowing either copying or deleting it
 class ShowRecipe extends StatelessWidget {
   final Map<String, dynamic> dishValues;
   final Map<String, dynamic> dishIngredients;

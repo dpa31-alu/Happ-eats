@@ -19,6 +19,7 @@ import '../services/auth_service.dart';
 import '../utils/loading_dialog.dart';
 import 'options_professional.dart';
 
+/// View for displaying the options of the professional menu, and the user name
 class MenuProfessional extends StatefulWidget {
   const MenuProfessional({super.key});
 
@@ -78,13 +79,13 @@ class _MenuProfessionalState extends State<MenuProfessional> {
                   _key.currentState!.openDrawer();
                 },
               ),
-          actions: [
-            Padding(padding:  const EdgeInsets.only(right: 10),
+          actions: const [
+            Padding(padding:  EdgeInsets.only(right: 10),
               child: CircleAvatar(
                 radius: 25,
                 backgroundColor: Colors.black,
                 child: Padding(
-                  padding: const EdgeInsets.all(1),
+                  padding: EdgeInsets.all(1),
                   child: Image(
                     image:AssetImage("assets/images/logo.png"),
                   ),

@@ -31,6 +31,9 @@ class DietsController {
 
   DietsController({required this.db, required this.auth, required this.file, required this.repositoryUser, required this.repositoryMessages, required this.repositoryApplication, required this.repositoryDiets});
 
+  /// Method for creating a diet, updates the application and sends a message to the user who made the application.
+  /// Requires the patient id, name, surname, gender, medical conditions, weight, height, birthday, objectives and type of diet
+  /// Returns null, or a string containing an error
   Future<String?> createDiet(String patient, String firstName, String lastName,
       String gender, String medicalCondition, double weight, double height, DateTime birthday, String objectives, String type) async {
     try {
@@ -50,6 +53,9 @@ class DietsController {
     return null;
   }
 
+  /// Method for adding a file on to a diet.
+  /// Requires the patient id, and the professional uid
+  /// Returns null, or a string containing an error
   Future<String?> addFile(String uid, String patient) async {
     try {
       WriteBatch batch = db.batch();
@@ -71,16 +77,22 @@ class DietsController {
     return null;
   }
 
+
+  /// Method for dowloading a diet file, returning the dowload link
+  /// Requires the patient id, the filename and the professional uid
+  /// Returns null, or a string containing an error
   Future<String?> downloadFile(String fileName, String patient, String professional) async {
     try {
-      await file.downloadDietFile(fileName, patient, professional);
+      return await file.downloadDietFile(fileName, patient, professional);
     }
     on FirebaseException catch (ex) {
       return ex.message;
     }
-    return null;
   }
 
+  /// Method for returning all diets of a certain type attached to a certain professional
+  /// Requires the patient type of diet and the amount
+  /// Returns a stream containing the data or an error
   Stream<QuerySnapshot<Map<String, dynamic>>> retrieveAllDiets(String type, int amount)  {
     User? currentUser = auth.getCurrentUser();
     if(currentUser!=null) {
@@ -92,6 +104,9 @@ class DietsController {
 
   }
 
+  /// Method for returning all diets of a certain type attached to a certain professional
+  /// Requires the patient type of diet and the amount
+  /// Returns a stream containing the data or an error
   Future<Map<String, dynamic>> retrieveDietForUser()  async {
     Map<String, dynamic> diet = {};
     try {
@@ -106,6 +121,9 @@ class DietsController {
     return diet;
   }
 
+  /// Method for returning all diets of a certain type attached to a certain professional
+  /// Requires the patient type of diet and the amount
+  /// Returns a stream containing the data or an error
   Stream<Map<String, dynamic>> retrieveDietForUserStream()   {
     User? currentUser = auth.getCurrentUser();
     Future<Map<String, dynamic>> diet;
@@ -114,9 +132,6 @@ class DietsController {
     } else {
       diet =  Future<Map<String, dynamic>>.value({});
     }
-
-
-    print(diet);
     return diet.asStream();
   }
 

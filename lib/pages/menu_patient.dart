@@ -26,7 +26,7 @@ import '../models/user.dart';
 import '../services/file_service.dart';
 import 'options_patient.dart';
 
-
+/// View for displaying the options of the patient menu, and the user name
 class MenuPatient extends StatefulWidget {
    const MenuPatient({super.key});
 

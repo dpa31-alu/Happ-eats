@@ -16,7 +16,7 @@ import '../services/auth_service.dart';
 import '../utils/validators.dart';
 import 'already_logged_redirect.dart';
 
-
+/// View for displaying the professional data and updating it, and deleting the account
 class OptionsProfessional extends StatefulWidget {
 
   const OptionsProfessional({super.key});

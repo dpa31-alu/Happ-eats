@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-
+/// Displays a loading circle
 loadingDialog(BuildContext context) {
   showDialog(
     barrierDismissible: false,

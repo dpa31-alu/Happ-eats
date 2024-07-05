@@ -7,7 +7,7 @@ import '../models/message.dart';
 import '../utils/getChatroomId.dart';
 
 
-
+/// Chat between a user and a professional
 class ChatPage extends StatefulWidget {
   final String currentUser;
   final String otherUser;

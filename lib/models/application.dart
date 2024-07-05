@@ -155,6 +155,9 @@ class ApplicationRepository {
 
   ApplicationRepository({required this.db});
 
+  /// Method for returning a user's application
+  /// Requires the uid of the user
+  /// Returns a future containing a map with the application data, or an empty map
   Future<Map<String, dynamic>> getApplicationForUserState(String uid) async {
     QuerySnapshot<Map<String, dynamic>> application = await db.collection('applications').where('user', isEqualTo: uid).limit(1).get();
     if (application.size != 0)
@@ -167,10 +170,16 @@ class ApplicationRepository {
 
   }
 
+  /// Method for returning all applications of a certain type
+  /// Requires the amount and the type
+  /// Returns a stream of query snapshots
   Stream<QuerySnapshot> getAllApplicationsByType(String type, int amount) {
     return db.collection('applications').where('state', isEqualTo: 'Pending').where('type', isEqualTo: type).orderBy('date', descending: true).limit(amount).snapshots();
   }
 
+  /// Method for adding an application's creation to the batch
+  /// Requires the batch, user, first name, gender, medical condition, weight, height, birthday, objectives and type
+  /// Returns a write batch
   Future<WriteBatch> createApplication(WriteBatch batch, String newUser, String newFirstName,
       String newLastName, String newGender, String newMedicalCondition,
       double newWeight, double newHeight, DateTime newBirthday, String newObjectives, String newType) async {
@@ -195,11 +204,17 @@ class ApplicationRepository {
 
   }
 
+  /// Method for returning a user's application
+  /// Requires the uid of the user
+  /// Returns an ApplicationModel object
   Future<ApplicationModel> getApplicationForUser(String uid) async {
     var application = await db.collection('applications').where('user', isEqualTo: uid).limit(1).get();
     return ApplicationModel.fromDocument(application.docs[0]);
   }
 
+  /// Method for adding an application's assignment to the batch
+  /// Requires the batch and user id
+  /// Returns a write batch
   Future<WriteBatch> assignApplication(WriteBatch batch, String uid) async {
     var application = await db.collection('applications').where('user', isEqualTo: uid).get();
     batch.update(application.docs[0].reference, {
@@ -207,8 +222,10 @@ class ApplicationRepository {
     });
     return batch;
   }
-  // (resource.data.toID == request.auth.uid || resource.data.fromID == request.auth.uid)
 
+  /// Method for adding an application's deletion to the batch
+  /// Requires the batch and user id
+  /// Returns a write batch
   Future<WriteBatch> deleteApplication(WriteBatch batch, String uid) async {
     batch.delete(db.collection('applications').doc(uid));
     return batch;

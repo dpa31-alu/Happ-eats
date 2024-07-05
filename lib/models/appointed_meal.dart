@@ -146,6 +146,9 @@ class AppointedMealRepository {
 
   AppointedMealRepository({required this.db});
 
+  /// Method for adding an appointed meal's creation to the batch
+  /// Requires the batch, id, diet id, professional id, patient id, date of the appointment, dish id, dish name, meal order and nutritional values map
+  /// Returns a write batch
   Future<WriteBatch> createAppointedMeal(WriteBatch batch, String id, String diet, String professional, String patient, DateTime appointedDate,
       String dish, String dishName, int mealOrder, Map<String, dynamic> values) async {
 
@@ -165,6 +168,9 @@ class AppointedMealRepository {
     return batch;
   }
 
+  /// Method for adding an appointed meal's issues to the batch
+  /// Requires the batch, text and user id
+  /// Returns a write batch
   Future<WriteBatch> signalIssuesAppointedMeal(WriteBatch batch, String id, String note) async {
 
     batch.update(db.collection('appointedMeals')
@@ -176,6 +182,9 @@ class AppointedMealRepository {
     return batch;
   }
 
+  /// Method for adding an appointed meal's confirmation to the batch
+  /// Requires the batch and user id
+  /// Returns a write batch
   Future<WriteBatch> consumedCorrectlyAppointedMeal(WriteBatch batch, String id) async {
 
     batch.update(db.collection('appointedMeals')
@@ -186,16 +195,25 @@ class AppointedMealRepository {
     return batch;
   }
 
+  /// Method for retrieving all appointed meals for a certain day and user
+  /// Requires the id of the user and the date for which the appointments were made
+  /// Returns a stream containing the data or an error
   Stream<QuerySnapshot> getAllAppointmentsForToday(DateTime date, String id) {
     return db.collection('appointedMeals').where('patient', isEqualTo: id)
         .where('appointedDate', isEqualTo: date).where('followedCorrectly', isEqualTo: true).snapshots();
   }
 
+  /// Method for retrieving all appointed meals within a time frame
+  /// Requires the id of the patient, professional and the start and end dates for which the appointments were made
+  /// Returns a stream containing the data or an error
   Stream<QuerySnapshot> getAllAppointmentsStream(DateTime dateStart, DateTime dateEnd, String idPatient, idProfessional) {
     return db.collection('appointedMeals').where('patient', isEqualTo: idPatient).where('professional', isEqualTo: idProfessional)
         .where('appointedDate', isGreaterThanOrEqualTo: dateStart).where('appointedDate', isLessThanOrEqualTo: dateEnd).snapshots();
   }
 
+  /// Method for adding all appointed meals' deletion to the batch
+  /// Requires the batch and user id
+  /// Returns a write batch
   Future<WriteBatch> deleteAllUserMeals(WriteBatch batch, String id) async {
 
     QuerySnapshot<Map<String, dynamic>> docs = await db.collection('appointedMeals').where('patient', isEqualTo: id).get();

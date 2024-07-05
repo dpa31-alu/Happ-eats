@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:happ_eats/pages/login.dart';
 import 'package:happ_eats/pages/sign_up_selector.dart';
 
+
+/// Welcome page with the options to log in or sign up
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
 

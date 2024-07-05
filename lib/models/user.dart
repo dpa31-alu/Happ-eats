@@ -116,6 +116,10 @@ class UserRepository {
 
   UserRepository({required this.db});
 
+
+  /// Method for adding a user's creation to a batch
+  /// Requires the batch, id, gender, first name, last name and phone number
+  /// Returns a write batch
   Future<WriteBatch> createUser(WriteBatch batch, String uid, String newFirstName, String newLastName, String newTel, String newGender) async {
     batch.set(db.collection('users')
         .doc(uid), {
@@ -127,33 +131,21 @@ class UserRepository {
     return batch;
   }
 
+
+  /// Method for adding a user's deletion to a batch
+  /// Requires the batch and id
+  /// Returns a write batch
   Future<WriteBatch> deleteUser(WriteBatch batch, String uid) async {
 
     batch.delete(db.collection('users')
         .doc(uid));
     return batch;
-    /*
-      await FirebaseFirestore.instance.collection('users').doc(uid).delete();
-      */
+
   }
 
-
-
-  /*
-  static Future<WriteBatch> updateUserInfo(WriteBatch batch, String uid, String newFirstName, String newLastName, String newTel, String newGender) async {
-      batch.update(db.collection('users')
-          .doc(uid), {
-        'firstName': newFirstName,
-        'lastName': newLastName,
-        'tel': newTel,
-        'gender': newGender,
-      });
-      return batch;
-      /*
-      db.collection('users').doc(uid).update(UserModel(firstName: newFirstName, lastName: newLastName, tel: newTel).toMap());
-      */
-  }*/
-
+  /// Method for adding a user's phone number update to a batch
+  /// Requires the batch, id and phone number
+  /// Returns a write batch
   Future<WriteBatch> updateUserTel(WriteBatch batch, String uid, String newTel) async {
     batch.update(db.collection('users')
         .doc(uid), {
@@ -162,6 +154,9 @@ class UserRepository {
     return batch;
   }
 
+  /// Method for adding a user's first name update to a batch
+  /// Requires the batch, id and first name
+  /// Returns a write batch
   Future<WriteBatch> updateUserFirstName(WriteBatch batch, String uid, String newFirstName) async {
     batch.update(db.collection('users')
         .doc(uid), {
@@ -170,6 +165,9 @@ class UserRepository {
     return batch;
   }
 
+  /// Method for adding a user's last name update to a batch
+  /// Requires the batch, id and last name
+  /// Returns a write batch
   Future<WriteBatch> updateUserLastName(WriteBatch batch, String uid, String newLastName,) async {
     batch.update(db.collection('users')
         .doc(uid), {
@@ -178,6 +176,9 @@ class UserRepository {
     return batch;
   }
 
+  /// Method for adding a user's gender update to a batch
+  /// Requires the batch, id and gender
+  /// Returns a write batch
   Future<WriteBatch> updateUserGender(WriteBatch batch, String uid, String newGender) async {
     batch.update(db.collection('users')
         .doc(uid), {
@@ -186,12 +187,17 @@ class UserRepository {
     return batch;
   }
 
-
+  /// Method for retrieving a user's data
+  /// Requires the id of the user
+  /// Returns a UserModel object
   Future<UserModel> getUser(String uid) async {
     var user = await db.collection('users').doc(uid).get();
     return UserModel.fromDocument(user);
   }
 
+  /// Method for adding a user's dishes update to a batch
+  /// Requires the batch, id, dish name, and dish id
+  /// Returns a write batch
   Future<WriteBatch> addDishes(WriteBatch batch, String id, String user, String dishName) async {
     batch.update(db.collection('users')
         .doc(user), {
@@ -200,6 +206,9 @@ class UserRepository {
     return batch;
   }
 
+  /// Method for adding a user's dishes deletion to a batch
+  /// Requires the batch, id, and dish id
+  /// Returns a write batch
   Future<WriteBatch> removeDishes(WriteBatch batch, String id, String user) async {
     batch.update(db.collection('users')
         .doc(user), {
@@ -207,16 +216,4 @@ class UserRepository {
     });
     return batch;
   }
-
-  /*
-   Future<DocumentSnapshot<Map<String, dynamic>>> retrieveDishes(String user) async {
-    return db.collection('users').doc(user).get();
-  }
-
-   Future<Map<String, dynamic>> retrieveUser(String user) async {
-    DocumentSnapshot doc = await db.collection('users').doc(user).get();
-    return UserModel.fromDocument(doc).toMap();
-  }*/
-
-
 }

@@ -6,7 +6,6 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:happ_eats/controllers/diet_controller.dart';
 import 'package:happ_eats/controllers/user_controller.dart';
 import 'package:happ_eats/models/application.dart';
 import 'package:happ_eats/models/appointed_meal.dart';
@@ -38,7 +37,6 @@ import 'user_controller_test.mocks.dart';
 void main() {
 
   final MockAuthService authService = MockAuthService();
-  final MockFileService fileService = MockFileService();
   final MockFirebaseAuth auth = MockFirebaseAuth();
 
   final MockUserRepository userRepository = MockUserRepository();
@@ -59,7 +57,6 @@ void main() {
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
       String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => auth.currentUser);
 
@@ -98,8 +95,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -116,7 +111,6 @@ void main() {
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
       String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => auth.currentUser);
 
@@ -156,8 +150,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -175,7 +167,6 @@ void main() {
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
       String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => auth.currentUser);
 
@@ -218,8 +209,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -235,7 +224,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
 
       when(authService.login('email', 'password')).thenAnswer((realInvocation) => auth.signInWithEmailAndPassword(email: 'email', password: 'password'));
 
@@ -251,7 +239,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
 
       when(authService.login('email', 'password')).thenAnswer((realInvocation) => throw FirebaseAuthException(code: 'code', message: 'error'));
 
@@ -268,7 +255,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
 
       when(authService.logout()).thenAnswer((realInvocation) async => true);
 
@@ -284,7 +270,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
 
       when(authService.logout()).thenAnswer((realInvocation) => throw FirebaseAuthException(code: 'code', message: 'error'));
 
@@ -309,14 +294,13 @@ void main() {
           repositoryPatient: patientRepository, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository,
           repositoryApplication: applicationRepository, repositoryDiets: dietRepository);
 
-      expect(await controller.getCurrentUserUid(), uid);
+      expect(controller.getCurrentUserUid(), uid);
     });
 
     test('getCurrentUserId returns null on error', () async {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => null);
 
@@ -325,7 +309,7 @@ void main() {
           repositoryPatient: patientRepository, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository,
           repositoryApplication: applicationRepository, repositoryDiets: dietRepository);
 
-      expect(await controller.getCurrentUserUid(), null);
+      expect(controller.getCurrentUserUid(), null);
     });
 
     test('updateUserTel updates correctly', () async {
@@ -333,7 +317,6 @@ void main() {
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
       String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => auth.currentUser);
 
@@ -377,8 +360,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -474,8 +455,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -572,8 +551,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -687,8 +664,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -787,8 +762,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -875,8 +848,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -963,8 +934,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -1051,8 +1020,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.getCurrentUser()).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye'));
 
@@ -1070,7 +1037,6 @@ void main() {
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
       String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.createUser('email', 'password')).thenAnswer((realInvocation) => auth.createUserWithEmailAndPassword(email: 'email', password: 'password'));
 
@@ -1115,8 +1081,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.createUser('email', 'password')).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye', message: 'ex'));
 
@@ -1133,7 +1097,6 @@ void main() {
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
       String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.createUser('email', 'password')).thenAnswer((realInvocation) => auth.createUserWithEmailAndPassword(email: 'email', password: 'password'));
 
@@ -1178,8 +1141,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       when(authService.createUser('email', 'password')).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'ye', message: 'ex'));
 
@@ -1192,12 +1153,11 @@ void main() {
           , 'ex');
     });
 
-    test('isPatient creates correctly', () async {
+    test('isPatient returns if user is a patient correctly', () async {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
       String uid = auth.currentUser!.uid;
-      DateTime date1 = DateTime.now();
 
       UsersController controller = UsersController(db: firestore, auth: authService,
           repositoryUser: userRepository, repositoryProfessional: professionalRepository, repositoryMessages: messageRepository,
@@ -1291,7 +1251,6 @@ void main() {
       await auth.signInWithCustomToken('some token');
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
-      String uid = auth.currentUser!.uid;
 
       UsersController controller = UsersController(db: firestore, auth: authService,
           repositoryUser: userRepository, repositoryProfessional: professionalRepository, repositoryMessages: messageRepository,
@@ -1299,9 +1258,81 @@ void main() {
           repositoryApplication: applicationRepository, repositoryDiets: dietRepository);
 
 
-      when(dietRepository.getAllDietsForProfessional(uid)).thenAnswer((realInvocation) => throw FirebaseException(plugin: 'plugin', message: 'error'));
+      when(authService.getCurrentUser()).thenAnswer((realInvocation)  => throw FirebaseException(plugin: 'plugin', message: 'error'));
 
-      expect(controller.deleteUserProfessional(), 'error');
+      expect(await controller.deleteUserProfessional(), 'error');
+
+
+    });
+
+    test('deleteUserProfessional deletes correctly', () async {
+      await auth.signInWithCustomToken('some token');
+      final firestore = FakeFirebaseFirestore(
+          authObject: auth.authForFakeFirestore);
+      String uid = auth.currentUser!.uid;
+
+      UsersController controller = UsersController(db: firestore, auth: authService,
+          repositoryUser: userRepository, repositoryProfessional: professionalRepository, repositoryMessages: messageRepository,
+          repositoryPatient: patientRepository, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository,
+          repositoryApplication: applicationRepository, repositoryDiets: dietRepository);
+
+      WriteBatch batch = firestore.batch();
+      batch.set(firestore.collection('patients').doc(uid), {
+        'gender': 'newGender',
+        'medicalCondition': 'newMedicalCondition',
+        'weight': double.parse('100'),
+        'startingWeight': double.parse('100'),
+        'height': double.parse('100'),
+        'birthday': DateTime.now(),
+      });
+      batch.set(firestore.collection('users').doc(uid), {
+        'tel': 'tel',
+      });
+      batch.commit();
+
+      WriteBatch batch2 = firestore.batch();
+      batch2.delete(firestore.collection('patients').doc(uid));
+      batch2.delete(firestore.collection('users').doc(uid));
+
+      when(patientRepository.deletePatient(any, any)).thenAnswer((realInvocation) async =>
+      batch2
+      );
+
+      when(userRepository.deleteUser(any, any)).thenAnswer((realInvocation) async =>
+      batch2
+      );
+
+      when(authService.getCurrentUser()).thenAnswer((realInvocation)  => auth.currentUser);
+
+      when(authService.deleteUser(uid)).thenAnswer((realInvocation)  => auth.currentUser!.delete());
+
+      when(applicationRepository.getApplicationForUserState(uid)).thenAnswer((realInvocation) async => {});
+
+      when(dishRepository.getAllDishesFuture(uid)).thenAnswer((realInvocation) => firestore.collection('dishes').get());
+
+      await controller.deleteUserPatient();
+
+      var doc = await firestore.collection('patients').doc(uid).get();
+      expect(doc.data(), null);
+
+      var doc2 = await firestore.collection('users').doc(uid).get();
+      expect(doc2.data(), null);
+
+    });
+
+    test('deleteUserPatient returns error code', () async {
+      await auth.signInWithCustomToken('some token');
+      final firestore = FakeFirebaseFirestore(
+          authObject: auth.authForFakeFirestore);
+
+      UsersController controller = UsersController(db: firestore, auth: authService,
+          repositoryUser: userRepository, repositoryProfessional: professionalRepository, repositoryMessages: messageRepository,
+          repositoryPatient: patientRepository, repositoryDish: dishRepository, repositoryAppointedMeal: appointedMealRepository,
+          repositoryApplication: applicationRepository, repositoryDiets: dietRepository);
+
+      when(authService.getCurrentUser()).thenAnswer((realInvocation)  => throw FirebaseException(plugin: 'plugin', message: 'error'));
+      
+      expect(await controller.deleteUserPatient(), 'error');
 
 
     });

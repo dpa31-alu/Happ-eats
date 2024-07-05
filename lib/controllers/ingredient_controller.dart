@@ -10,6 +10,9 @@ class IngredientsController {
 
   IngredientsController({required this.db, required this.repositoryIngredient});
 
+  /// Retrieves all the ingredients from the database
+  /// Modifies them to be manageable
+  /// Returns a list with the data, or null
   Future<List<Map<String, dynamic>>?> retrieveAllIngredients()  async {
     try {
      QuerySnapshot<Map<String, dynamic>> querySnapshot = await repositoryIngredient.getAllIngredients();
@@ -28,16 +31,4 @@ class IngredientsController {
       return null;
     }
   }
-
-  /*
-  Future<String?> crearCosis()  async {
-    try {
-      await repositoryIngredient.crearcosis();
-    }
-    on FirebaseException catch (ex) {
-      return ex.message;
-    }
-    return null;
-  }*/
-
 }

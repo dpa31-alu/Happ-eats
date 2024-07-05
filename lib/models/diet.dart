@@ -164,7 +164,9 @@ class DietRepository {
 
   DietRepository({required this.db});
 
-
+  /// Method for adding a diet's creation to a batch
+  /// Requires the batch, patient, professional, first name, last name, gender, medical condition, weight, height, birthday, objectives and type
+  /// Returns a write batch
   Future<WriteBatch> createDiet(WriteBatch batch, String newPatient, String newProfessional, String newFirstName, newLastName, String newGender, String newMedicalCondition,
       double newWeight, double newHeight, DateTime newBirthday, String newObjectives, String newType) async {
 
@@ -188,6 +190,9 @@ class DietRepository {
 
   }
 
+  /// Method for adding a diet's first name update to a batch
+  /// Requires the batch, diet uid and first name
+  /// Returns a write batch
   Future<WriteBatch> updateDietFirstName(WriteBatch batch, String uid, String newFirstName) async {
     batch.update(db.collection('diets')
         .doc(uid), {
@@ -196,6 +201,9 @@ class DietRepository {
     return batch;
   }
 
+  /// Method for adding a diet's last name update to a batch
+  /// Requires the batch, diet uid and last name
+  /// Returns a write batch
   Future<WriteBatch> updateDietLastName(WriteBatch batch, String uid, String newLastName,) async {
     batch.update(db.collection('diets')
         .doc(uid), {
@@ -204,6 +212,9 @@ class DietRepository {
     return batch;
   }
 
+  /// Method for adding a diet's gender update to a batch
+  /// Requires the batch, diet uid and gender
+  /// Returns a write batch
   Future<WriteBatch> updateDietGender(WriteBatch batch, String uid, String newGender) async {
     batch.update(db.collection('diets')
         .doc(uid), {
@@ -212,6 +223,9 @@ class DietRepository {
     return batch;
   }
 
+  /// Method for adding a diet's medical conditions update to a batch
+  /// Requires the batch, diet uid and medical conditions
+  /// Returns a write batch
   Future<WriteBatch> updateDietMedicalCondition(WriteBatch batch, String uid,
       String newMedicalCondition) async {
     batch.update(db.collection('diets')
@@ -221,6 +235,9 @@ class DietRepository {
     return batch;
   }
 
+  /// Method for adding a diet's weight update to a batch
+  /// Requires the batch, diet uid and weight
+  /// Returns a write batch
   Future<WriteBatch> updateDietWeight(WriteBatch batch, String uid, String newWeight) async {
     batch.update(db.collection('diets')
         .doc(uid), {
@@ -229,6 +246,9 @@ class DietRepository {
     return batch;
   }
 
+  /// Method for adding a diet's height update to a batch
+  /// Requires the batch, diet uid and height
+  /// Returns a write batch
   Future<WriteBatch> updateDietHeight(WriteBatch batch, String uid, String newHeight) async {
     batch.update(db.collection('diets')
         .doc(uid), {
@@ -237,6 +257,9 @@ class DietRepository {
     return batch;
   }
 
+  /// Method for adding a diet's birthday update to a batch
+  /// Requires the batch, diet uid and birthday
+  /// Returns a write batch
   Future<WriteBatch> updateDietBirthday(WriteBatch batch, String uid, String newBirthday) async {
     batch.update(db.collection('diets')
         .doc(uid), {
@@ -245,11 +268,17 @@ class DietRepository {
     return batch;
   }
 
+  /// Method for adding a diet's deletion to a batch
+  /// Requires the batch and diet uid
+  /// Returns a write batch
   Future<WriteBatch> deleteDiet(WriteBatch batch, String uid) async {
     batch.delete(db.collection('diets').doc(uid));
     return batch;
   }
 
+  /// Method for adding a diet's ref creation to a batch
+  /// Requires the batch, diet uid and url
+  /// Returns a write batch
   Future<WriteBatch> addRefApplication(WriteBatch batch, String uid, String url) async {
 
     batch.update(db.collection('diets').doc(uid), {
@@ -258,10 +287,16 @@ class DietRepository {
     return batch;
   }
 
+  /// Method for retrieving all diets for a certain professional
+  /// Requires the type, amount and uid
+  /// Returns a stream
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllDiets(String type, int amount, String id) {
     return db.collection('diets').where('professional', isEqualTo: id).where('type', isEqualTo: type).limit(amount).snapshots();
   }
 
+  /// Method for retrieving a diet for a certain user
+  /// Requires the uid of the patient
+  /// Returns a map with the info or an empty map
   Future<Map<String, dynamic>> getDietForUser(String id) async {
     var diet = await db.collection('diets').where('patient', isEqualTo: id).limit(1).get();
     if (diet.size!=0)
@@ -275,6 +310,9 @@ class DietRepository {
 
   }
 
+  /// Method for retrieving all diets for a certain professional as a future
+  /// Requires the uid of the professional
+  /// Returns a future containing a query snapshot
   Future<QuerySnapshot<Map<String, dynamic>>> getAllDietsForProfessional(String id) async {
     QuerySnapshot<Map<String, dynamic>> diets = await db.collection('diets').where('professional', isEqualTo: id).get();
     return diets;

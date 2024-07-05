@@ -47,6 +47,10 @@ class UsersController {
     required this.repositoryApplication,
     required this.repositoryDiets,});
 
+  /// Creates a patient
+  /// Requires the email, password, phone number, first name, last name, birthday, gender, medical conditions, weight and height
+  /// Creates the patient, user and authentication
+  /// Returns null, or a string with the error
   Future<String?> createUserPatient(String email, String password, String tel,
       String firstName, String lastName, String birthday,
       String gender, String medicalCondition, String weight, String height)  async{
@@ -66,6 +70,9 @@ class UsersController {
     return null;
   }
 
+  /// Updates a user's phone number
+  /// Requires the phone number
+  /// Returns null, or a string with the error
   Future<String?> updateUserTel(String tel)  async{
     try {
       WriteBatch batch = db.batch();
@@ -79,6 +86,9 @@ class UsersController {
     return null;
   }
 
+  /// Updates a user's first name
+  /// Requires the first name and optionally the info of a diet that also needs to be updated
+  /// Returns null, or a string with the error
   Future<String?> updateUserFirstName(String firstName, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
@@ -97,6 +107,9 @@ class UsersController {
     return null;
   }
 
+  /// Updates a patient's last name
+  /// Requires the last name and optionally the info of a diet that also needs to be updated
+  /// Returns null, or a string with the error
   Future<String?> updateUserLastName(String lastName, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
@@ -115,6 +128,9 @@ class UsersController {
     return null;
   }
 
+  /// Updates a user's gender
+  /// Requires the gender and optionally the info of a diet that also needs to be updated. Also requires to know if the user is a patient
+  /// Returns null, or a string with the error
   Future<String?> updatePatientGender(String gender, Map diet, bool isPatient)  async{
     WriteBatch batch = db.batch();
     try {
@@ -137,6 +153,9 @@ class UsersController {
     return null;
   }
 
+  /// Updates a patient's medical condition
+  /// Requires the medical condition and optionally the info of a diet that also needs to be updated
+  /// Returns null, or a string with the error
   Future<String?> updatePatientMedicalCondition(String medicalCondition,  Map diet)  async{
     WriteBatch batch = db.batch();
     try {
@@ -155,6 +174,9 @@ class UsersController {
     return null;
   }
 
+  /// Updates a patient's weight
+  /// Requires the weight and optionally the info of a diet that also needs to be updated
+  /// Returns null, or a string with the error
   Future<String?> updatePatientWeight(String weight, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
@@ -173,6 +195,9 @@ class UsersController {
     return null;
   }
 
+  /// Updates a patient's height
+  /// Requires the height and optionally the info of a diet that also needs to be updated
+  /// Returns null, or a string with the error
   Future<String?> updatePatientHeight(String height, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
@@ -191,6 +216,9 @@ class UsersController {
     return null;
   }
 
+  /// Updates a patient's birthday
+  /// Requires the birthday and optionally the info of a diet that also needs to be updated
+  /// Returns null, or a string with the error
   Future<String?> updatePatientBirthday(String birthday, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
@@ -209,10 +237,14 @@ class UsersController {
     return null;
   }
 
+  /// Deletes a patient
+  /// Deletes the patient, user, application and diet attached to him, every dish, every message and every appointment
+  /// Returns null, or a string with the error
    Future<String?> deleteUserPatient()  async{
 
-    WriteBatch batch = db.batch();
+
     try {
+      WriteBatch batch = db.batch();
       User? user = auth.getCurrentUser();
 
       Map<String, dynamic> application = await repositoryApplication.getApplicationForUserState(user!.uid);
@@ -267,6 +299,10 @@ class UsersController {
     return null;
   }
 
+  /// Creates a professional
+  /// Requires the email, password, phone number, first name, last name, college number and gender
+  /// Creates the professional, user and authentication
+  /// Returns null, or a string with the error
    Future<String?> createUserProfessional(String email, String password, String tel,
       String firstName, String lastName, String collegeNumber, String gender) async {
       WriteBatch batch = db.batch();
@@ -284,9 +320,10 @@ class UsersController {
       return null;
   }
 
+  /// Deletes a professional
+  /// Deletes the professional, user, every diet attached to them, every dish, every message and every appointment
+  /// Returns null, or a string with the error
    Future<String?> deleteUserProfessional()  async{
-
-
      try {
        WriteBatch batch = db.batch();
        User? user = auth.getCurrentUser();
@@ -337,10 +374,14 @@ class UsersController {
 
   }
 
+  /// Returns a bool signaling if the user is a patient or not
+  /// Returns true if the user is a patient, or false if they aren't
    Stream<bool> isPatient(String uid) {
      return repositoryPatient.isPatient(uid).asStream();
    }
 
+  /// Logs in the user
+  /// Returns null, or a string with the error
   Future<String?> loginUser(String email, String password)  async{
     try {
        await auth.login(email, password);
@@ -350,6 +391,8 @@ class UsersController {
     return null;
   }
 
+  /// Logs out the user
+  /// Returns null, or a string with the error
   Future<String?> logoutUser()  async{
     try {
        await auth.logout();
@@ -359,6 +402,8 @@ class UsersController {
     return null;
   }
 
+  /// Retrieves the user uid
+  /// Returns a the uid as a string, or null
   String? getCurrentUserUid()  {
        User? user =  auth.getCurrentUser();
        if(user!= null) {
@@ -369,6 +414,8 @@ class UsersController {
        }
   }
 
+  /// Retrieves the patient data as a future
+  /// Returns a UserModel object with the data, or null if there is an error
   Future<UserModel>? getUserDataFuture()  {
     try {
       User? user =  auth.getCurrentUser();
@@ -384,6 +431,8 @@ class UsersController {
   }
 
 
+  /// Retrieves the user data as a stream
+  /// Returns a stream with the data, or null if there is an error
   Stream<UserModel>? getUserData()  {
     try {
       User? user =  auth.getCurrentUser();
@@ -404,6 +453,8 @@ class UsersController {
   }
 
 
+  /// Retrieves the patient data as a stream
+  /// Returns a stream with the data, or null if there is an error
   Stream<PatientModel>? getPatientData()  {
     try {
       User? user =  auth.getCurrentUser();

@@ -15,7 +15,7 @@ import '../services/auth_service.dart';
 import '../services/file_service.dart';
 import 'calendar_professional.dart';
 
-
+/// View for displaying all of a professional's patients, accessing their calendars, uploading their files and chatting with them.
 class ShowPatients extends StatefulWidget {
   const ShowPatients({super.key});
 

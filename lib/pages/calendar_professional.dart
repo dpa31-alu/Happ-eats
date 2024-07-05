@@ -22,7 +22,7 @@ import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../services/file_service.dart';
 
-
+/// View for displaying appointed meals and their progress, and creating them
 class CalendarProfessional extends StatefulWidget {
 
   final String dietID;

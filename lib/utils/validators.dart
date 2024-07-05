@@ -1,3 +1,5 @@
+
+/// Different validators for the app
 String? validateEmail (String? email)  {
   if (email == null || email.isEmpty) {
     return 'Por favor, introduzca su email.';

@@ -16,7 +16,7 @@ import '../models/appointed_meal.dart';
 import '../models/dish.dart';
 import '../services/auth_service.dart';
 
-
+/// View for displaying appointed meals, informing of their progress and viewing recipes
 class CalendarPatient extends StatefulWidget {
 
   final String patientID;
@@ -243,7 +243,7 @@ class CalendarPatientState extends State<CalendarPatient> {
                                                 children: [
                                                    if(_selectedEvents[index]['note']!=null)
                                                      Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                       Text(_selectedEvents[index]['note'], style: TextStyle(color: Colors.red,))
+                                                       Text(_selectedEvents[index]['note'], style: const TextStyle(color: Colors.red,))
                                                      ],
                                                      ),
 

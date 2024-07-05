@@ -14,6 +14,9 @@ class AppointedMealsController {
 
   AppointedMealsController({required this.db, required this.repositoryDish, required this.repositoryAppointedMeal});
 
+  /// Method for creating an appointed meal
+  /// Requires the dish name, its id, the diet it belongs to, the professional and patient attached to that diet, the time for the appointment, and the meal it corresponds to
+  /// Returns null, or a string containing an error
   Future<String?> createAppointment(String dishName, String dish, String diet, String professional, String patient, DateTime appointedDate, int order) async {
     try {
 
@@ -31,16 +34,23 @@ class AppointedMealsController {
   }
 
 
-
+  /// Method for retrieving all appointed meals for a certain day and user
+  /// Requires the id of the user and the date for which the appointments were made
+  /// Returns a stream containing the data or an error
   Stream<QuerySnapshot<Object?>> retrieveAllDishesForUser(String id, DateTime date)  {
     return repositoryAppointedMeal.getAllAppointmentsForToday(date, id);
   }
 
-
+  /// Method for retrieving all appointed meals within a time frame
+  /// Requires the id of the patient, professional and the start and end dates for which the appointments were made
+  /// Returns a stream containing the data or an error
   Stream<QuerySnapshot> retrieveAllDishesForUserStream(DateTime dateStart, DateTime dateEnd, String idPatient, String idProfessional)  {
     return repositoryAppointedMeal.getAllAppointmentsStream(dateStart, dateEnd, idPatient, idProfessional);
   }
 
+  /// Method for confirming an appointed meal
+  /// Requires the id of the appointedMeal to modify
+  /// Returns null, or a string containing an error
   Future<String?> confirmConsumption(String id)  async {
     try {
       WriteBatch batch = db.batch();
@@ -53,6 +63,9 @@ class AppointedMealsController {
     return null;
   }
 
+  /// Method for notifying errors on an appointed meal
+  /// Requires the id of the appointedMeal to modify, and a string with the warning
+  /// Returns null, or a string containing an error
   Future<String?> writeNote(String id, String note)  async {
     try {
       WriteBatch batch = db.batch();

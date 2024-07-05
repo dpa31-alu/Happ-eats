@@ -110,6 +110,9 @@ class PatientRepository {
 
   PatientRepository({required this.db});
 
+  /// Method for adding a patient's creation to a batch
+  /// Requires the batch, id, gender, medical condition, height, weight and birthday
+  /// Returns a write batch
   Future<WriteBatch> createPatient(WriteBatch batch, String uid, String newGender,
       String newMedicalCondition, String newWeight, String newHeight, String newBirthday) async {
 
@@ -127,6 +130,9 @@ class PatientRepository {
 
   }
 
+  /// Method for adding a patient's deletion to a batch
+  /// Requires the batch and id
+  /// Returns a write batch
  Future<WriteBatch> deletePatient(WriteBatch batch, String uid) async {
 
     batch.delete(db.collection('patients').doc(uid));
@@ -134,6 +140,9 @@ class PatientRepository {
 
   }
 
+  /// Method for adding a patient's gender update to a batch
+  /// Requires the batch, id and gender
+  /// Returns a write batch
  Future<WriteBatch> updatePatientGender(WriteBatch batch, String uid, String newGender) async {
     batch.update(db.collection('patients')
         .doc(uid), {
@@ -142,6 +151,9 @@ class PatientRepository {
     return batch;
   }
 
+  /// Method for adding a patient's medical condition update to a batch
+  /// Requires the batch, id and medical condition
+  /// Returns a write batch
   Future<WriteBatch> updatePatientMedicalCondition(WriteBatch batch, String uid,
       String newMedicalCondition) async {
     batch.update(db.collection('patients')
@@ -151,6 +163,9 @@ class PatientRepository {
     return batch;
   }
 
+  /// Method for adding a patient's weight update to a batch
+  /// Requires the batch, id and weight
+  /// Returns a write batch
   Future<WriteBatch> updatePatientWeight(WriteBatch batch, String uid, String newWeight) async {
     batch.update(db.collection('patients')
         .doc(uid), {
@@ -159,6 +174,9 @@ class PatientRepository {
     return batch;
   }
 
+  /// Method for adding a patient's height update to a batch
+  /// Requires the batch, id and height
+  /// Returns a write batch
   Future<WriteBatch> updatePatientHeight(WriteBatch batch, String uid, String newHeight) async {
     batch.update(db.collection('patients')
         .doc(uid), {
@@ -167,6 +185,9 @@ class PatientRepository {
     return batch;
   }
 
+  /// Method for adding a patient's birthday update to a batch
+  /// Requires the batch, id and birthday
+  /// Returns a write batch
   Future<WriteBatch> updatePatientBirthday(WriteBatch batch, String uid, String newBirthday) async {
     batch.update(db.collection('patients')
         .doc(uid), {
@@ -175,6 +196,9 @@ class PatientRepository {
     return batch;
   }
 
+  /// Method for retrieving whether a id belongs to a patient or not
+  /// Requires the id
+  /// Returns a future containing a bool
   Future<bool> isPatient(String uid) async {
     DocumentSnapshot doc = await db.collection('patients').doc(uid).get();
     if (doc.data()!=null)
@@ -186,6 +210,9 @@ class PatientRepository {
     }
   }
 
+  /// Method for retrieving a patient's data'
+  /// Requires the id
+  /// Returns a future containing a PatientModel object
   Future<PatientModel> getPatient(String uid) async {
     var user = await db.collection('patients').doc(uid).get();
     return PatientModel.fromDocument(user);

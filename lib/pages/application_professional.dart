@@ -15,6 +15,7 @@ import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../services/file_service.dart';
 
+/// View for assinging applications based on type
 class ApplicationProfessional extends StatefulWidget {
   const ApplicationProfessional({super.key});
 
@@ -146,7 +147,7 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                                                 SizedBox(
                                                   height: size.height * 0.29,
                                                 ),
-                                                Text('No hay peticiones pendientes de esta categoría')
+                                                const Text('No hay peticiones pendientes de esta categoría')
                                               ],
                                             )
                                          )
@@ -180,7 +181,6 @@ class _ApplicationProfessionalState extends State<ApplicationProfessional> {
                                                           TextButton(
                                                             onPressed: () async {
 
-                                                              DocumentSnapshot<Map<String, dynamic>> doc = snapshot.data.docs[index];
 
                                                               String? result = await controllerDiets.createDiet(snapshot.data.docs[index]['user'],
                                                                   snapshot.data.docs[index]['firstName'],

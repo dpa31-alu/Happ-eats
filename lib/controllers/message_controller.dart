@@ -11,6 +11,9 @@ class MessagesController {
 
   MessagesController({required this.db, required this.repositoryMessages});
 
+  /// Sends a message
+  /// Requires the chatroom id, the id of the sender and recieverm and the text
+  /// Returns null, or a string with an error
   Future<String?> sendMessage(String chatroomId , String toId, String fromId, String text) async {
     try {
       WriteBatch batch = db.batch();
@@ -23,6 +26,9 @@ class MessagesController {
     return null;
   }
 
+  /// Retrieves all the messages of a certain conversation
+  /// Requires the dish id of the chatroom and the amount of messages
+  /// Returns a stream with the information, or an error
   Stream<QuerySnapshot<Object?>?> retrieveConversationMessages(int amount, String id)  {
       return repositoryMessages.getMessagesForAmount(amount, id);
   }

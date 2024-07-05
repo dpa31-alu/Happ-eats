@@ -15,6 +15,7 @@ import '../models/professional.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
 
+/// View for displaying the patient progress on their nutrition
 class Tracker extends StatefulWidget {
   final String gender;
    const Tracker({super.key, required this.gender});

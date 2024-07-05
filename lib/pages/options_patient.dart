@@ -21,7 +21,7 @@ import '../utils/calculateBMI.dart';
 import '../utils/validators.dart';
 import 'already_logged_redirect.dart';
 
-
+/// View for displaying the patient data and updating it, and deleting the account
 class OptionsPatient extends StatefulWidget {
 
   const OptionsPatient({super.key});
@@ -174,7 +174,6 @@ class OptionsPatientState extends State<OptionsPatient> {
                               diet = snapshot3.data;
                             }
 
-                          print(alreadyRead);
                           if(!alreadyRead)
                             {
                               alreadyRead=true;
@@ -187,7 +186,6 @@ class OptionsPatientState extends State<OptionsPatient> {
                               height = snapshot2.data.height.toStringAsFixed(2);
                               medical = snapshot2.data.medicalCondition;
                             }
-                          print(alreadyRead);
                           //print(firstName);
 
                           return SingleChildScrollView(
@@ -609,6 +607,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                   validator: (value) {
                                                                     return validateWeight(value);
                                                                   },
+                                                                  keyboardType: TextInputType.number,
                                                                   decoration: const InputDecoration(
                                                                     border: OutlineInputBorder(),
                                                                     labelText: 'Peso en kgs',
@@ -687,6 +686,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                   validator: (value) {
                                                                     return validateHeight(value);
                                                                   },
+                                                                  keyboardType: TextInputType.number,
                                                                   decoration: const InputDecoration(
                                                                     border: OutlineInputBorder(),
                                                                     labelText: 'Altura en metros',

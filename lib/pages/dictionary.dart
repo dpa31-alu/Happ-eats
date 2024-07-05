@@ -16,7 +16,7 @@ import '../services/file_service.dart';
 import '../utils/loading_dialog.dart';
 import '../utils/validators.dart';
 
-
+/// View containing the data for the dictionary, it's filterin and searching, and the dish creation
 class Dictionary extends StatefulWidget {
   const Dictionary({super.key});
 

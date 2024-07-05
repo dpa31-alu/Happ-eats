@@ -15,6 +15,7 @@ import '../models/professional.dart';
 import '../models/user.dart';
 import '../services/auth_service.dart';
 
+/// View for login in users
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 

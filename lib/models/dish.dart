@@ -112,6 +112,10 @@ class DishRepository {
 
   DishRepository({required this.db});
 
+
+  /// Method for adding a dish's creation to a batch
+  /// Requires the batch, id, user, name, description, nutritional info, ingredients and optional image name
+  /// Returns a write batch
   Future<WriteBatch> createDish(WriteBatch batch, String id, String user, String dishName, String description,
       Map<String, dynamic> nutritionalInfo, String? imageName, Map<String, dynamic> ingredientes) async {
 
@@ -129,19 +133,31 @@ class DishRepository {
 
   }
 
+  /// Method for adding a dish's deletion to a batch
+  /// Requires the batch, id
+  /// Returns a write batch
   Future<WriteBatch> deleteDish(WriteBatch batch, String uid) async {
     batch.delete(db.collection('dishes').doc(uid));
     return batch;
   }
 
+  /// Method for retrieving all dishes for a certain user as a strean
+  /// Requires the uid of the user and the amount
+  /// Returns a stream
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllDishes(int amount, String id) {
     return db.collection('dishes').where('user', isEqualTo: id).limit(amount).snapshots();
   }
 
+  /// Method for retrieving a dish as a future
+  /// Requires the uid of the dish
+  /// Returns a future containing a document snapshot
   Future<DocumentSnapshot<Map<String, dynamic>>> getDish(String id) {
     return db.collection('dishes').doc(id).get();
   }
 
+  /// Method for retrieving all dishes for a certain user as a future
+  /// Requires the uid of the user
+  /// Returns a future containing a query snapshot
   Future<QuerySnapshot<Map<String, dynamic>>> getAllDishesFuture(String id) async {
      return db.collection('dishes').where('user', isEqualTo: id).get();
   }

@@ -23,6 +23,9 @@ class DishesController {
 
   DishesController({required this.db, required this.auth, required this.file, required this.repositoryUser, required this.repositoryDish, });
 
+  /// Method for creating a dish
+  /// Requires the dish name, description, a map with the nutritional info, a map with the ingredients and optionally a file
+  /// Returns null, or a string with an error
   Future<String?> createDish(String dishName, String description,
       Map<String, dynamic> nutritionalInfo, FilePickerResult? imageFile, Map<String, dynamic> ingredientes) async {
     try {
@@ -49,6 +52,9 @@ class DishesController {
     return null;
   }
 
+  /// Method for copying a dish
+  /// Requires the dish name, description, a map with the nutritional info and a map with the ingredients
+  /// Returns null, or a string with an error
   Future<String?> copyDish(String dishName, String description,
       Map<String, dynamic> nutritionalInfo, Map<String, dynamic> ingredientes) async {
     try {
@@ -67,6 +73,9 @@ class DishesController {
     return null;
   }
 
+  /// Retrieves all the dishes for a certain user
+  /// Requires the amount
+  /// Returns a stream with the data or an error
   Stream<QuerySnapshot<Map<String, dynamic>>> retrieveAllDishesForUser(int amount)  {
     User? currentUser = auth.getCurrentUser();
     if (currentUser != null) {
@@ -77,6 +86,9 @@ class DishesController {
     }
   }
 
+  /// Retrieves a certain dish from the database for a user
+  /// Requires the dish id
+  /// Returns null, or documentsnapshot with the data
   Future<DocumentSnapshot<Map<String, dynamic>>?>? retrieveDishForUser(String id) async {
     try {
       return await repositoryDish.getDish(id);
@@ -86,6 +98,9 @@ class DishesController {
     }
   }
 
+  /// Deletes a certain dish
+  /// Requires the dish id, the user id, and the image corresponding to that dish
+  /// Returns null, or a string with an error
   Future<String?> deleteDish(String dishId, String user, String? dishImage)  async {
     try {
       WriteBatch batch = db.batch();
@@ -106,6 +121,8 @@ class DishesController {
     return null;
   }
 
+  /// Obtains an image from the user's phone
+  /// Returns the file obtained or null
   Future<FilePickerResult?> getImage()  async {
     try {
       return await file.getImageFile();
@@ -115,15 +132,5 @@ class DishesController {
     }
 
   }
-
-  /*
-  Future<String?> getImageURL(String fileName, String user) async {
-    try {
-      return await file.getDownloadURL(fileName, "users", user);
-    }
-    on FirebaseException {
-      return null;
-    }
-  }*/
 
 }

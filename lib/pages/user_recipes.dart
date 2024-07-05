@@ -10,6 +10,7 @@ import '../models/user.dart';
 import '../services/auth_service.dart';
 import '../services/file_service.dart';
 
+/// View for displaying all of a user's recipes
 class UserRecipes extends StatefulWidget {
   const UserRecipes({super.key});
 

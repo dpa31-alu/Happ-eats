@@ -64,6 +64,9 @@ class ProfessionalRepository {
 
   ProfessionalRepository({required this.db});
 
+  /// Method for adding a professional's creation to a batch
+  /// Requires the batch, id and collegeNumber
+  /// Returns a write batch
    Future<WriteBatch> createProfessional(WriteBatch batch, String uid, String newCollegeNumber) async {
 
     batch.set(db.collection('professionals')
@@ -74,11 +77,18 @@ class ProfessionalRepository {
     return batch;
   }
 
+
+  /// Method for adding a professional's deletion to a batch
+  /// Requires the batch and id
+  /// Returns a write batch
    Future<WriteBatch> deleteProfessional(WriteBatch batch, String uid) async {
     batch.delete(db.collection('professionals').doc(uid));
     return batch;
   }
 
+  /// Method for retrieving a professional's data'
+  /// Requires the id
+  /// Returns a future containing a ProfessionalModel object
   Future<ProfessionalModel> getProfessional(String uid) async {
     var user = await db.collection('professionals').doc(uid).get();
     return ProfessionalModel.fromDocument(user);

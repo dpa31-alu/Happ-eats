@@ -16,6 +16,7 @@ import 'package:happ_eats/services/auth_service.dart';
 import '../controllers/user_controller.dart';
 import '../models/professional.dart';
 
+/// View for controlling the redirection on login to both menus
 class RedirectLogin extends StatelessWidget {
   const RedirectLogin({super.key});
 

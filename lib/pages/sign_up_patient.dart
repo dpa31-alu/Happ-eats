@@ -17,6 +17,7 @@ import '../services/auth_service.dart';
 import '../utils/validators.dart';
 import 'already_logged_redirect.dart';
 
+/// View for singing up a patient
 class SignUpPatient extends StatefulWidget {
   const SignUpPatient ({super.key});
 

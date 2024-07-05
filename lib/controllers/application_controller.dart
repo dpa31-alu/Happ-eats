@@ -34,6 +34,9 @@ class ApplicationsController {
 
   ApplicationsController({required this.db, required this.auth, required this.file, required this.repositoryUser, required this.repositoryPatient, required this.repositoryAppointedMeal, required this.repositoryApplication, required this.repositoryMessages, required this.repositoryDiets });
 
+  /// Method for creating an application for a patient.
+  /// Requires the objectives and type of the application
+  /// Returns a null if it works correctly, a string containing the error message if not
   Future<String?> createApplication(String newObjectives, String newType) async {
     try {
       User? currentUser = auth.getCurrentUser();
@@ -49,10 +52,15 @@ class ApplicationsController {
     return null;
   }
 
+  /// Method for returning all applications for a certain type
+  /// Requires the amount and type of the application to be retrieved
+  /// Returns a stream containing the data, or containing an error
   Stream<QuerySnapshot<Object?>> getApplicationsByTypeStream(String type, int amount)  {
     return repositoryApplication.getAllApplicationsByType(type, amount);
   }
 
+  /// Method for returning an application for a certain user
+  /// Returns a map containing the data, or an empty map
   Stream<Map<String, dynamic>> getApplicationForUserState() {
     User? currentUser = auth.getCurrentUser();
     if (currentUser!=null) {
@@ -64,6 +72,9 @@ class ApplicationsController {
     }
   }
 
+  /// Method for deleting a user's application
+  /// Requires the id of the application to be deleted and optionally the information of a diet that was connected to it
+  /// Returns a null if it worked correctly, or a string containing the error
   Future<String?> cancelApplication(String id, Map<String, dynamic>? diet)  async {
     try {
       User? currentUser = auth.getCurrentUser();
