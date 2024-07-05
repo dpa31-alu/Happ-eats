@@ -53,13 +53,13 @@ class RedirectLogin extends StatelessWidget {
                 builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot2) {
                   if (snapshot2.connectionState == ConnectionState.waiting)
                     {
-                      return const Center(child: CircularProgressIndicator(),);
+                      return const SafeArea(child: Center(child: CircularProgressIndicator(),));
                     }
                   else if (snapshot.hasError) {
                     return const WelcomePage();
                   }
                   else if (!snapshot2.hasData) {
-                    return  const Center(child: CircularProgressIndicator(),);
+                    return  const SafeArea(child: Center(child: CircularProgressIndicator(),));
                   }
                   else if (snapshot2.data == true) {
                     /*Navigator.pushReplacement(context,  MaterialPageRoute<void>(

@@ -68,12 +68,22 @@ class OptionsPatientState extends State<OptionsPatient> {
   late Stream _statePatient;
   late Stream _stateDiet;
 
+  bool alreadyRead = false;
+  String firstName = "";
+  String lastName = "";
+  String gender= "";
+  String tel= "";
+  String bday= "";
+  String weight= "";
+  String height= "";
+  String medical= "";
+
   final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     _stateUser = _controllerUsers.getUserData()!;
-    _statePatient = _controllerUsers.getPatientData();
+    _statePatient = _controllerUsers.getPatientData()!;
     _stateDiet = _controllerDiets.retrieveDietForUserStream();
     super.initState();
   }
@@ -83,7 +93,6 @@ class OptionsPatientState extends State<OptionsPatient> {
 
   @override
   Widget build(BuildContext context) {
-
 
     return Scaffold(
       //resizeToAvoidBottomInset: false,
@@ -143,15 +152,43 @@ class OptionsPatientState extends State<OptionsPatient> {
                         );
                       }
                       else if (snapshot2.data != null) {
+
+
                         return StreamBuilder(
                         stream: _stateDiet,
                         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot3) {
 
-                          bool diet = false;
+                          if(snapshot3.connectionState == ConnectionState.waiting)
+                            {
+                              return const Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Center(child: CircularProgressIndicator(),)
+                                ],
+                              );
+                            }
+
+                          Map diet = {};
                           if (snapshot3.data.toString() != '{}')
                             {
-                              diet = true;
+                              diet = snapshot3.data;
                             }
+
+                          print(alreadyRead);
+                          if(!alreadyRead)
+                            {
+                              alreadyRead=true;
+                              firstName = snapshot.data.firstName;
+                              lastName = snapshot.data.lastName;
+                              gender = snapshot.data.gender;
+                              tel = snapshot.data.tel;
+                              bday = "${snapshot2.data.birthday.year}-${snapshot2.data.birthday.month}-${snapshot2.data.birthday.day}";
+                              weight = snapshot2.data.weight.toStringAsFixed(2);
+                              height = snapshot2.data.height.toStringAsFixed(2);
+                              medical = snapshot2.data.medicalCondition;
+                            }
+                          print(alreadyRead);
+                          //print(firstName);
 
                           return SingleChildScrollView(
                               child: Center(
@@ -166,7 +203,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 const Text('Tus datos:', style: TextStyle(fontSize: 25.0),),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Nombre: ${snapshot.data.firstName}"),
+                                                  title: Text("Nombre: $firstName"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
@@ -212,6 +249,12 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                                 SnackBar(content: Text(result)),
                                                                               );
                                                                             }
+                                                                            else {
+                                                                              setState(() {
+                                                                                firstName = _nameController.text;
+                                                                                _nameController.clear();
+                                                                              });
+                                                                            }
                                                                           }
                                                                         } else {
                                                                           ScaffoldMessenger.of(context).showSnackBar(
@@ -233,7 +276,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Apellidos: ${snapshot.data.lastName}"),
+                                                  title: Text("Apellidos: $lastName"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
@@ -281,7 +324,8 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                             }
                                                                             else {
                                                                               setState(() {
-                                                                                _statePatient = _controllerUsers.getPatientData();
+                                                                                lastName = _surnameController.text;
+                                                                                _surnameController.clear();
                                                                               });
                                                                             }
                                                                           }
@@ -305,7 +349,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Género: ${snapshot.data.gender}"),
+                                                  title: Text("Género: $gender"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
@@ -364,7 +408,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                             }
                                                                             else {
                                                                               setState(() {
-                                                                                _statePatient = _controllerUsers.getPatientData();
+                                                                                gender = _dropdownValue;
                                                                               });
                                                                             }
                                                                           }
@@ -388,7 +432,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Teléfono: ${snapshot.data.tel}"),
+                                                  title: Text("Teléfono: $tel"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
@@ -436,7 +480,8 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                             }
                                                                             else {
                                                                               setState(() {
-                                                                                _statePatient = _controllerUsers.getPatientData();
+                                                                                tel = _phoneController.text;
+                                                                                _phoneController.clear();
                                                                               });
                                                                             }
                                                                           }
@@ -461,7 +506,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Cumpleaños: ${snapshot2.data.birthday.day}/${snapshot2.data.birthday.month}/${snapshot2.data.birthday.year} "),
+                                                  title: Text("Cumpleaños: $bday"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
@@ -522,7 +567,8 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                             }
                                                                             else {
                                                                               setState(() {
-                                                                                _statePatient = _controllerUsers.getPatientData();
+                                                                                bday = _birthdayController.text;
+                                                                                _birthdayController.clear();
                                                                               });
                                                                             }
                                                                           }
@@ -547,7 +593,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Peso: ${snapshot2.data.weight.toStringAsFixed(2)}"),
+                                                  title: Text("Peso: ${double.parse(weight).toStringAsFixed(2)}"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
@@ -565,7 +611,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                   },
                                                                   decoration: const InputDecoration(
                                                                     border: OutlineInputBorder(),
-                                                                    labelText: 'Peso en kg',
+                                                                    labelText: 'Peso en kgs',
                                                                   ),
                                                                 ),
                                                                 Row(
@@ -595,7 +641,8 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                             }
                                                                             else {
                                                                               setState(() {
-                                                                                _statePatient = _controllerUsers.getPatientData();
+                                                                                weight = _weightController.text;
+                                                                                _weightController.clear();
                                                                               });
                                                                             }
                                                                           }
@@ -624,11 +671,11 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                 ),
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("Altura: ${snapshot2.data.height.toStringAsFixed(2)}"),
+                                                  title: Text("Altura: ${double.parse(height).toStringAsFixed(2)}"),
                                                   trailing: IconButton(onPressed: () async {
                                                     showDialog(context: context, builder: (BuildContext context) {
                                                       return AlertDialog(
-                                                        title: const Text("Actualice su peso"),
+                                                        title: const Text("Actualice su altura"),
                                                         content: Form(
                                                             key: _formKey,
                                                             child:
@@ -642,7 +689,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                   },
                                                                   decoration: const InputDecoration(
                                                                     border: OutlineInputBorder(),
-                                                                    labelText: 'Altura en cm',
+                                                                    labelText: 'Altura en metros',
                                                                   ),
                                                                 ),
                                                                 Row(
@@ -672,7 +719,8 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                             }
                                                                             else {
                                                                               setState(() {
-                                                                                _statePatient = _controllerUsers.getPatientData();
+                                                                                height = _heightController.text;
+                                                                                _heightController.clear();
                                                                               });
                                                                             }
                                                                           }
@@ -695,20 +743,21 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                   },
                                                       icon: const Icon(Icons.update_sharp)),
                                                 ),
+
                                                 const Divider(),
                                                 ListTile(
-                                                  title: Text("BMI: ${calculateBMI(snapshot2.data.height, snapshot2.data.weight).toStringAsFixed(2)}"),
+                                                  title: Text("IMC: ${calculateBMI(double.parse(height), double.parse(weight)).toStringAsFixed(2)}"),
                                                   //trailing: Text(snapshot.data['type'], style: const TextStyle(fontSize: 15.0),),
                                                 ),
                                                 const Divider(),
                                                 Column(
                                                   children: [
                                                     const Text('Condiciones Médicas:', style: TextStyle(fontSize: 20.0),),
-                                                    Text(snapshot2.data.medicalCondition),
+                                                    Text(medical),
                                                     IconButton(onPressed: () async {
                                                       showDialog(context: context, builder: (BuildContext context) {
                                                         return AlertDialog(
-                                                            title: const Text("Actualice su peso"),
+                                                            title: const Text("Actualice sus condiciones médicas"),
                                                             content: SingleChildScrollView(
                                                               child:  Form(
                                                                   key: _formKey,
@@ -727,7 +776,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                         maxLines: null,
                                                                         decoration: const InputDecoration(
                                                                           border: OutlineInputBorder(),
-                                                                          labelText: 'Condiciones médicas previas',
+                                                                          labelText: 'Condiciones médicas',
                                                                         ),
                                                                       ),
                                                                       Row(
@@ -744,7 +793,7 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                               String? result;
                                                                               if (_formKey.currentState!.validate())  {
                                                                                 loadingDialog(context);
-                                                                                result = await _controllerUsers.updatePatientMedicalCondition(_heightController.text, diet);
+                                                                                result = await _controllerUsers.updatePatientMedicalCondition(_medicalConditionsController.text, diet);
                                                                                 if(context.mounted)
                                                                                 {
                                                                                   Navigator.pop(context);
@@ -757,7 +806,8 @@ class OptionsPatientState extends State<OptionsPatient> {
                                                                                   }
                                                                                   else {
                                                                                     setState(() {
-                                                                                      _statePatient = _controllerUsers.getPatientData();
+                                                                                      medical = _medicalConditionsController.text;
+                                                                                      _medicalConditionsController.clear();
                                                                                     });
                                                                                   }
                                                                                 }

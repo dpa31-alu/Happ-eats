@@ -58,24 +58,17 @@ class UsersController {
       batch = await repositoryPatient.createPatient(batch, user.user!.uid,gender, medicalCondition, weight, height, birthday);
       await batch.commit();
     } on FirebaseAuthException catch (ex) {
-      User? user = auth.getCurrentUser();
-      if (user!=null)
-        {
-          await  auth.deleteUser(user.uid);
-        }
         return ex.message;
     }
     on FirebaseException catch (ex) {
-        User? user =  auth.getCurrentUser();
-        await auth.deleteUser(user!.uid);
         return ex.message;
     }
     return null;
   }
 
   Future<String?> updateUserTel(String tel)  async{
-    WriteBatch batch = db.batch();
     try {
+      WriteBatch batch = db.batch();
       User? user =  auth.getCurrentUser();
       batch = await repositoryUser.updateUserTel(batch, user!.uid, tel);
       await batch.commit();
@@ -86,14 +79,14 @@ class UsersController {
     return null;
   }
 
-  Future<String?> updateUserFirstName(String firstName, bool diet)  async{
+  Future<String?> updateUserFirstName(String firstName, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
       User? user =  auth.getCurrentUser();
       batch = await repositoryUser.updateUserFirstName(batch, user!.uid, firstName);
 
-      if(diet){
-        batch = await repositoryDiets.updateDietFirstName(batch, user.uid, firstName);
+      if(diet['uid']!=null){
+        batch = await repositoryDiets.updateDietFirstName(batch, diet['uid'], firstName);
       }
 
       await batch.commit();
@@ -104,14 +97,14 @@ class UsersController {
     return null;
   }
 
-  Future<String?> updateUserLastName(String lastName, bool diet)  async{
+  Future<String?> updateUserLastName(String lastName, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
       User? user =  auth.getCurrentUser();
       batch = await repositoryUser.updateUserLastName(batch, user!.uid,lastName,);
 
-      if(diet){
-        batch = await repositoryDiets.updateDietLastName(batch, user.uid, lastName);
+      if(diet['uid']!=null){
+        batch = await repositoryDiets.updateDietLastName(batch, diet['uid'], lastName);
       }
 
       await batch.commit();
@@ -122,18 +115,18 @@ class UsersController {
     return null;
   }
 
-  Future<String?> updatePatientGender(String gender, bool diet, bool isPatient)  async{
+  Future<String?> updatePatientGender(String gender, Map diet, bool isPatient)  async{
     WriteBatch batch = db.batch();
     try {
       User? user =  auth.getCurrentUser();
       batch = await repositoryUser.updateUserGender(batch, user!.uid, gender);
 
       if(isPatient) {
-        batch = await repositoryPatient.updatePatientGender(batch, user.uid, gender);
+        batch = await repositoryPatient.updatePatientGender(batch,  user.uid, gender);
       }
 
-      if(diet){
-        batch = await repositoryDiets.updateDietGender(batch, user.uid, gender);
+      if(diet['uid']!=null){
+        batch = await repositoryDiets.updateDietGender(batch,  diet['uid'], gender);
       }
 
       await batch.commit();
@@ -144,14 +137,14 @@ class UsersController {
     return null;
   }
 
-  Future<String?> updatePatientMedicalCondition(String medicalCondition, bool diet)  async{
+  Future<String?> updatePatientMedicalCondition(String medicalCondition,  Map diet)  async{
     WriteBatch batch = db.batch();
     try {
       User? user =  auth.getCurrentUser();
       batch = await repositoryPatient.updatePatientMedicalCondition(batch, user!.uid,  medicalCondition,);
 
-      if(diet){
-        batch = await repositoryDiets.updateDietMedicalCondition(batch, user.uid, medicalCondition);
+      if(diet['uid']!=null){
+        batch = await repositoryDiets.updateDietMedicalCondition(batch, diet['uid'], medicalCondition);
       }
 
       await batch.commit();
@@ -162,11 +155,16 @@ class UsersController {
     return null;
   }
 
-  Future<String?> updatePatientWeight(String weight, bool diet)  async{
+  Future<String?> updatePatientWeight(String weight, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
       User? user =  auth.getCurrentUser();
       batch = await repositoryPatient.updatePatientWeight(batch, user!.uid, weight);
+
+      if(diet['uid']!=null){
+        batch = await repositoryDiets.updateDietWeight(batch, diet['uid'], weight);
+      }
+
       await batch.commit();
     }
     on FirebaseException catch (ex) {
@@ -175,11 +173,16 @@ class UsersController {
     return null;
   }
 
-  Future<String?> updatePatientHeight(String height, bool diet)  async{
+  Future<String?> updatePatientHeight(String height, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
       User? user =  auth.getCurrentUser();
       batch = await repositoryPatient.updatePatientHeight(batch, user!.uid, height);
+
+      if(diet['uid']!=null){
+        batch = await repositoryDiets.updateDietHeight(batch, diet['uid'], height);
+      }
+
       await batch.commit();
     }
     on FirebaseException catch (ex) {
@@ -188,11 +191,16 @@ class UsersController {
     return null;
   }
 
-  Future<String?> updatePatientBirthday(String birthday, bool diet)  async{
+  Future<String?> updatePatientBirthday(String birthday, Map diet)  async{
     WriteBatch batch = db.batch();
     try {
       User? user =  auth.getCurrentUser();
       batch = await repositoryPatient.updatePatientBirthday(batch, user!.uid, birthday);
+
+      if(diet['uid']!=null){
+        batch = await repositoryDiets.updateDietBirthday(batch, diet['uid'], birthday);
+      }
+
       await batch.commit();
     }
     on FirebaseException catch (ex) {
@@ -209,8 +217,10 @@ class UsersController {
 
       Map<String, dynamic> application = await repositoryApplication.getApplicationForUserState(user!.uid);
 
+
       if(application['user']!=null) {
-        batch = await repositoryApplication.deleteApplication(batch, user.uid);
+
+        batch = await repositoryApplication.deleteApplication(batch, application['uid']);
         Map<String, dynamic> diet = await repositoryDiets.getDietForUser(user.uid);
         if(diet['patient']!=null) {
           if(diet['url']!=null)
@@ -228,24 +238,26 @@ class UsersController {
           ids.sort();
           String messageUid = ids.join();
           batch = await repositoryMessages.deleteAllUserMessages(batch, messageUid);
-
         }
       }
       QuerySnapshot query = await repositoryDish.getAllDishesFuture(user.uid);
       for(DocumentSnapshot docu in query.docs) {
         FileService fileService = FileService(storage: FirebaseStorage.instance, auth: auth);
-        String? resultImage = await fileService.deleteImage(docu['image']);
-        if (resultImage!=null)
-        {
-          return resultImage;
-        }
+        if(docu['image']!=null)
+          {
+            String? resultImage = await fileService.deleteImage(docu['image']);
+            if (resultImage!=null)
+            {
+              return resultImage;
+            }
+          }
          batch.delete(db.collection('dishes')
             .doc(docu.id));
       }
       batch = await repositoryUser.deleteUser(batch, user.uid);
       batch = await repositoryPatient.deletePatient(batch, user.uid);
-      await auth.deleteUser(user.uid);
       await batch.commit();
+      await auth.deleteUser(user.uid);
     } on FirebaseAuthException catch (ex) {
       return ex.message;
     }
@@ -264,16 +276,9 @@ class UsersController {
         batch = await repositoryProfessional.createProfessional(batch, user.user!.uid, collegeNumber);
         await batch.commit();
       } on FirebaseAuthException catch (ex) {
-        User? user = auth.getCurrentUser();
-        if (user!=null)
-        {
-          auth.deleteUser(user.uid);
-        }
         return ex.message;
       }
       on FirebaseException catch (ex) {
-        User? user = auth.getCurrentUser();
-        await auth.deleteUser(user!.uid);
         return ex.message;
       }
       return null;
@@ -281,11 +286,10 @@ class UsersController {
 
    Future<String?> deleteUserProfessional()  async{
 
-     WriteBatch batch = db.batch();
+
      try {
+       WriteBatch batch = db.batch();
        User? user = auth.getCurrentUser();
-
-
 
          QuerySnapshot<Map<String, dynamic>> diets = await repositoryDiets.getAllDietsForProfessional(user!.uid);
 
@@ -306,7 +310,6 @@ class UsersController {
                ids.sort();
                String messageUid = ids.join();
                batch = await repositoryMessages.deleteAllUserMessages(batch, messageUid);
-
            }
 
        QuerySnapshot query = await repositoryDish.getAllDishesFuture(user.uid);
@@ -322,8 +325,8 @@ class UsersController {
        }
        batch = await repositoryUser.deleteUser(batch, user.uid);
        batch = await repositoryProfessional.deleteProfessional(batch, user.uid);
-       await auth.deleteUser(user.uid);
        await batch.commit();
+       await auth.deleteUser(user.uid);
      } on FirebaseAuthException catch (ex) {
        return ex.message;
      }
@@ -373,25 +376,46 @@ class UsersController {
       return userData;
     } on FirebaseAuthException {
       return null;
-    }
-  }
-
-  Stream<UserModel>? getUserData()  {
-    User? user =  auth.getCurrentUser();
-    if(user!=null) {
-      Future<UserModel> userData = repositoryUser.getUser(user.uid);
-      return userData.asStream();
-    }
-    else {
+    } on FirebaseException {
+      return null;
+    } on Exception {
       return null;
     }
   }
 
 
-  Stream<PatientModel> getPatientData()  {
-    User? user =  auth.getCurrentUser();
-    Future<PatientModel> userData = repositoryPatient.getPatient(user!.uid);
-    return userData.asStream();
+  Stream<UserModel>? getUserData()  {
+    try {
+      User? user =  auth.getCurrentUser();
+      if(user!=null) {
+        Future<UserModel> userData = repositoryUser.getUser(user.uid);
+        return userData.asStream();
+      }
+      else {
+        return null;
+      }
+    } on FirebaseAuthException {
+      return null;
+    } on FirebaseException {
+      return null;
+    } on Exception {
+      return null;
+    }
+  }
+
+
+  Stream<PatientModel>? getPatientData()  {
+    try {
+      User? user =  auth.getCurrentUser();
+      Future<PatientModel> userData = repositoryPatient.getPatient(user!.uid);
+      return userData.asStream();
+    } on FirebaseAuthException {
+      return null;
+    } on FirebaseException {
+      return null;
+    } on Exception {
+      return null;
+    }
   }
 
 

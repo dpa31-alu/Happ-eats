@@ -100,6 +100,12 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                     );
                   }
                   else if (snapshot.data != null) {
+
+                    String firstName = snapshot.data.firstName;
+                    String lastName = snapshot.data.lastName;
+                    String gender = snapshot.data.gender;
+                    String tel = snapshot.data.tel;
+
                     return SingleChildScrollView(
                                       child: Center(
                                         child: Column(
@@ -113,7 +119,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                         const Text('Tus datos:', style: TextStyle(fontSize: 25.0),),
                                                         const Divider(),
                                                         ListTile(
-                                                          title: Text("Nombre: ${snapshot.data.firstName}"),
+                                                          title: Text("Nombre: $firstName"),
                                                           trailing: IconButton(onPressed: () async {
                                                             showDialog(context: context, builder: (BuildContext context) {
                                                               return AlertDialog(
@@ -148,7 +154,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                                                 String? result;
                                                                                 if (_formKey.currentState!.validate())  {
                                                                                   loadingDialog(context);
-                                                                                  result = await _controllerUsers.updateUserFirstName(_nameController.text, false);
+                                                                                  result = await _controllerUsers.updateUserFirstName(_nameController.text, {});
                                                                                   if(context.mounted)
                                                                                   {
                                                                                     Navigator.pop(context);
@@ -158,6 +164,11 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                                                       ScaffoldMessenger.of(context).showSnackBar(
                                                                                         SnackBar(content: Text(result)),
                                                                                       );
+                                                                                    }
+                                                                                    else {
+                                                                                      setState(() {
+                                                                                        _stateUser= _controllerUsers.getUserData()!;
+                                                                                      });
                                                                                     }
                                                                                   }
                                                                                 } else {
@@ -180,7 +191,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                         ),
                                                         const Divider(),
                                                         ListTile(
-                                                          title: Text("Apellidos: ${snapshot.data.lastName}"),
+                                                          title: Text("Apellidos: $lastName"),
                                                           trailing: IconButton(onPressed: () async {
                                                             showDialog(context: context, builder: (BuildContext context) {
                                                               return AlertDialog(
@@ -215,7 +226,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                                                 String? result;
                                                                                 if (_formKey.currentState!.validate())  {
                                                                                   loadingDialog(context);
-                                                                                  result = await _controllerUsers.updateUserLastName(_surnameController.text, false);
+                                                                                  result = await _controllerUsers.updateUserLastName(_surnameController.text, {});
                                                                                   if(context.mounted)
                                                                                   {
                                                                                     Navigator.pop(context);
@@ -252,7 +263,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                         ),
                                                         const Divider(),
                                                         ListTile(
-                                                          title: Text("Género: ${snapshot.data.gender}"),
+                                                          title: Text("Género: $gender"),
                                                           trailing: IconButton(onPressed: () async {
                                                             showDialog(context: context, builder: (BuildContext context) {
                                                               return AlertDialog(
@@ -298,7 +309,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                                               onPressed: () async {
                                                                                 if (_formKey.currentState!.validate())  {
                                                                                   loadingDialog(context);
-                                                                                  String? result = await _controllerUsers.updatePatientGender(_dropdownValue, false, false);
+                                                                                  String? result = await _controllerUsers.updatePatientGender(_dropdownValue, {}, false);
                                                                                   if(context.mounted)
                                                                                   {
                                                                                     Navigator.pop(context);
@@ -335,7 +346,7 @@ class OptionsProfessionalState extends State<OptionsProfessional> {
                                                         ),
                                                         const Divider(),
                                                         ListTile(
-                                                          title: Text("Teléfono: ${snapshot.data.tel}"),
+                                                          title: Text("Teléfono: $tel"),
                                                           trailing: IconButton(onPressed: () async {
                                                             showDialog(context: context, builder: (BuildContext context) {
                                                               return AlertDialog(

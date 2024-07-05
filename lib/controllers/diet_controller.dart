@@ -114,6 +114,9 @@ class DietsController {
     } else {
       diet =  Future<Map<String, dynamic>>.value({});
     }
+
+
+    print(diet);
     return diet.asStream();
   }
 
