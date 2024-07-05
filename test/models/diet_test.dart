@@ -514,7 +514,7 @@ void main()  {
 
     });
 
-    test('Get all diets returns the correct amount of diets for the correct professional', () async {
+    test('Get all diets returns error code', () async {
       MockFirebaseAuth auth = MockFirebaseAuth();
       final firestore = FakeFirebaseFirestore(
           authObject: auth.authForFakeFirestore);
@@ -552,7 +552,7 @@ void main()  {
       }
 
       whenCalling(Invocation.method(#get,  null))
-          .on(firestore.collection('diets').where('professional', isEqualTo: uid))
+          .on(firestore.collection('diets').doc())
           .thenThrow(FirebaseException(plugin: 'pe',code: 'bla'));
 
       expect(() =>  repository.getAllDietsForProfessional(uid), throwsException);

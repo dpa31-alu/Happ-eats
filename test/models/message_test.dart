@@ -71,7 +71,7 @@ void main()  {
 
       WriteBatch batch = firestore.batch();
       batch = await repository.deleteAllUserMessages(batch, '$uid$uid');
-      batch.commit();
+      await batch.commit();
 
       QuerySnapshot<Map<String, dynamic>> a = await firestore.collection('chatrooms').doc('$uid$uid').collection('messages').get();
       expect(a.docs.length, 0);
